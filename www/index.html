@@ -474,46 +474,57 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
   pointer-events:none;
 }
 .combatant{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:140px;max-width:180px;}
+/* ── CYBER-GOD ROSTER ENGINE ─────────────────────────────── */
 .combatant-sprite{
-  width:140px;height:220px;border-radius:4px;
+  width:140px !important;height:220px !important;border-radius:4px !important;
   display:flex;align-items:flex-end;justify-content:center;
   position:relative;overflow:hidden;
-  border:1px solid color-mix(in srgb,currentColor 40%,transparent);
+  border:1px solid color-mix(in srgb,currentColor 30%,transparent) !important;
   background:radial-gradient(ellipse at bottom,rgba(6,4,20,0.9) 20%,rgba(0,0,0,1) 100%) !important;
-  box-shadow:0 0 20px color-mix(in srgb,currentColor 20%,transparent),0 0 60px color-mix(in srgb,currentColor 12%,transparent);
-  animation:float 3s ease-in-out infinite;
-  transition:box-shadow 0.4s,border-color 0.4s,opacity 0.8s;
+  box-shadow:0 0 25px color-mix(in srgb,currentColor 20%,transparent) !important;
+  transition:all 0.3s cubic-bezier(0.25,1,0.5,1);
 }
 .battle-3d-active .combatant-sprite{
   opacity:0.25;
-  box-shadow:0 0 15px currentColor,0 0 30px currentColor;
+  box-shadow:0 0 15px currentColor,0 0 30px currentColor !important;
 }
-/* Spinning halo ring */
+/* Halo ring base */
 .combatant-halo{
   position:absolute;top:15%;left:50%;
   width:110px;height:110px;
-  transform:translate(-50%,-10%) rotate(0deg) skewX(-10deg);
-  border:2px dashed color-mix(in srgb,currentColor 30%,transparent);
+  transform:translate(-50%,-10%) skewX(-6deg);
+  border:2px solid color-mix(in srgb,currentColor 25%,transparent);
   border-radius:50%;z-index:1;
-  animation:haloSpin 12s linear infinite;
+  animation:haloSpin 14s linear infinite;
   pointer-events:none;
 }
-@keyframes haloSpin{100%{transform:translate(-50%,-10%) rotate(360deg) skewX(-10deg);}}
-/* Geometric body silhouette */
+@keyframes haloSpin{100%{transform:translate(-50%,-10%) rotate(360deg) skewX(-6deg);}}
+/* Body silhouette base — default speedster polygon */
 .combatant-body{
   width:100%;height:100%;
-  background:linear-gradient(180deg,rgba(10,10,15,0.95) 0%,rgba(2,2,5,1) 100%);
+  background:linear-gradient(180deg,rgba(10,10,15,0.96) 0%,rgba(2,2,5,1) 100%);
   clip-path:polygon(50% 0%,65% 12%,60% 25%,85% 35%,70% 55%,90% 75%,75% 100%,25% 100%,10% 75%,30% 55%,15% 35%,40% 25%,35% 12%);
   filter:drop-shadow(0 0 12px currentColor);
   position:relative;z-index:2;
-  animation:humanIdle 3.5s ease-in-out infinite;
   transform-origin:bottom center;
+  animation:humanIdle 3.5s ease-in-out infinite;
 }
+/* Scan sweep over body */
+.combatant-body::after{
+  content:'';
+  position:absolute;
+  top:-100%;left:0;width:100%;height:80%;
+  background:linear-gradient(to bottom,transparent,color-mix(in srgb,currentColor 60%,transparent) 45%,#fff 50%,color-mix(in srgb,currentColor 60%,transparent) 55%,transparent);
+  opacity:0.7;
+  transform:skewY(-10deg);
+  animation:bodyScan 2.8s cubic-bezier(0.4,0,0.2,1) infinite;
+}
+@keyframes bodyScan{0%{top:-100%;}100%{top:200%;}}
 @keyframes humanIdle{
-  0%,100%{transform:translateY(0) scaleY(1);}
-  50%{transform:translateY(-4px) scaleY(1.02);}
+  0%,100%{transform:translateY(0) scaleY(1);filter:brightness(1);}
+  50%{transform:translateY(-4px) scaleY(1.02) scaleX(0.99);filter:brightness(1.15);}
 }
-/* Icon floats above the body */
+/* Icon floats centered above body */
 .combatant-icon{
   position:absolute;top:50%;left:50%;
   transform:translate(-50%,-50%);
@@ -522,19 +533,50 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
   animation:float 3s ease-in-out infinite;
   pointer-events:none;
 }
-/* Recoil hit animation */
-@keyframes realisticHurt{
-  0%{transform:translateX(0) scaleY(1);filter:contrast(2) brightness(3);}
-  15%{transform:translateX(-25px) scaleY(0.9) rotate(-6deg);}
-  100%{transform:translateX(0) scaleY(1);filter:none;}
+/* ── ARCHETYPE POLYGONS ───────────────────────────────────── */
+/* Speedster — electric */
+.super-speedster .combatant-body{
+  clip-path:polygon(50% 0%,65% 12%,60% 25%,85% 35%,70% 55%,90% 75%,75% 100%,25% 100%,10% 75%,30% 55%,15% 35%,40% 25%,35% 12%);
 }
-.combatant-sprite.hit{animation:realisticHurt 0.45s ease-in-out both !important;}
-/* Legacy hitFlash kept for fallback */
+.super-speedster .combatant-halo{border-style:dashed;}
+/* Juggernaut — steel, earth */
+.super-juggernaut .combatant-body{
+  clip-path:polygon(20% 10%,80% 10%,95% 30%,85% 60%,90% 100%,70% 100%,65% 75%,35% 75%,30% 100%,10% 100%,15% 60%,5% 30%);
+}
+.super-juggernaut .combatant-halo{
+  border-radius:0;
+  clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%);
+  border-style:double;
+}
+/* Assassin — dark, poison */
+.super-assassin .combatant-body{
+  clip-path:polygon(50% 0%,60% 15%,55% 30%,95% 40%,60% 50%,65% 70%,80% 100%,55% 100%,45% 80%,20% 100%,35% 65%,25% 45%,40% 30%);
+}
+.super-assassin .combatant-halo{
+  border:none;
+  background:linear-gradient(45deg,transparent 40%,currentColor 40%,transparent 60%);
+  background-size:200%;
+  animation:bladeSheen 2.5s linear infinite;
+}
+@keyframes bladeSheen{0%{background-position:0%;}100%{background-position:200%;}}
+/* Elemental — fire, ice, water, magic */
+.super-elemental .combatant-body{
+  clip-path:polygon(50% 0%,70% 20%,60% 40%,80% 55%,65% 75%,55% 95%,45% 95%,35% 75%,20% 55%,40% 40%,30% 20%);
+  animation:floatingLevitation 3.8s ease-in-out infinite !important;
+}
+@keyframes floatingLevitation{0%,100%{transform:translateY(-4px);}50%{transform:translateY(-16px) scale(0.97);}}
+/* ── HIT RECOIL ──────────────────────────────────────────── */
+@keyframes realisticHurt{
+  0%{transform:translateX(0);filter:contrast(2) brightness(3);}
+  15%{transform:translateX(-22px) rotate(-5deg) scaleY(0.9);}
+  100%{transform:translateX(0);filter:none;}
+}
+.combatant-sprite.hit{animation:realisticHurt 0.45s cubic-bezier(0.25,1,0.5,1) both !important;}
 @keyframes hitFlash{0%,100%{filter:brightness(1)}50%{filter:brightness(3) saturate(0)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 /* Shadow under sprite */
 .combatant-shadow{
-  width:70px;height:10px;border-radius:50%;
+  width:110px !important;height:8px !important;border-radius:50%;
   background:rgba(0,0,0,0.4);filter:blur(4px);
   margin-top:-4px;animation:shadowPulse 3s ease-in-out infinite;
 }
@@ -4661,9 +4703,17 @@ function renderBattleSides(){
   if(!myS||!oppS) return;
   const col=s=>TYPE_COLORS[s.type]||'#aaa';
 
+  const ARCHETYPES={'electric':'super-speedster','steel':'super-juggernaut','earth':'super-juggernaut','dark':'super-assassin','poison':'super-assassin','fire':'super-elemental','ice':'super-elemental','water':'super-elemental','magic':'super-elemental'};
+  const ALL_ARCHETYPES=['super-speedster','super-juggernaut','super-assassin','super-elemental'];
   const buildSpriteHTML=(s)=>`<div class="combatant-halo"></div><div class="combatant-body"></div><div class="combatant-icon">${s.icon||'❓'}</div>`;
+  function applyArchetype(el,s){
+    ALL_ARCHETYPES.forEach(c=>el.classList.remove(c));
+    const arch=ARCHETYPES[s.type];
+    if(arch) el.classList.add(arch);
+  }
   const myEl=document.getElementById('my-sprite');
   myEl.innerHTML=buildSpriteHTML(myS);
+  applyArchetype(myEl,myS);
   myEl.style.color=col(myS);
   myEl.style.borderColor=col(myS);
   myEl.style.boxShadow=`0 0 30px ${col(myS)},0 0 60px ${col(myS)},inset 0 0 20px rgba(255,255,255,0.05)`;
@@ -4678,6 +4728,7 @@ function renderBattleSides(){
 
   const oppEl=document.getElementById('opp-sprite');
   oppEl.innerHTML=buildSpriteHTML(oppS);
+  applyArchetype(oppEl,oppS);
   oppEl.style.color=col(oppS);
   oppEl.style.borderColor=col(oppS);
   oppEl.style.boxShadow=`0 0 30px ${col(oppS)},0 0 60px ${col(oppS)},inset 0 0 20px rgba(255,255,255,0.05)`;
