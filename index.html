@@ -12,8 +12,304 @@
 <link rel="apple-touch-icon" href="icon-192.png"/>
 <title>SuperForce</title>
 <style>
+/* ═══════════════════════════════════════════════════════════
+   SUPERFORCE — CYBERPUNK SHONEN AESTHETIC UPGRADE
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── 1. ELEMENTAL CSS VARIABLES ─────────────────────────── */
+:root{
+  --neon-cyan:    #00d4ff;
+  --neon-gold:    #f59e0b;
+  --neon-violet:  #8b5cf6;
+  --neon-pink:    #ec4899;
+  --neon-red:     #ef4444;
+  --neon-green:   #4ade80;
+  --neon-orange:  #f97316;
+  /* Chaos Lightning signature palette */
+  --chaos-primary: #00cfff;
+  --chaos-accent:  #ff8c00;
+  /* Glass panels */
+  --glass-bg:     rgba(6,4,20,0.72);
+  --glass-border: rgba(139,92,246,0.18);
+  --glass-blur:   16px;
+  /* Skew angle for kinetic HUD elements */
+  --hud-skew: -6deg;
+}
+
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#fff;}
+
+/* ── 2. DYNAMIC NEON AURAS on combatant sprites ─────────── */
+@keyframes plasmaAura{
+  0%  { box-shadow: 0 0 28px currentColor, 0 0 56px currentColor,
+                    inset 0 0 18px rgba(255,255,255,0.06),
+                    0 0 4px #fff; }
+  50% { box-shadow: 0 0 48px currentColor, 0 0 96px currentColor,
+                    0 0 140px color-mix(in srgb,currentColor 40%,transparent),
+                    inset 0 0 28px rgba(255,255,255,0.12),
+                    0 0 8px #fff; }
+  100%{ box-shadow: 0 0 28px currentColor, 0 0 56px currentColor,
+                    inset 0 0 18px rgba(255,255,255,0.06),
+                    0 0 4px #fff; }
+}
+@keyframes plasmaFilter{
+  0%,100%{ filter: brightness(1)   saturate(1.1); }
+  50%    { filter: brightness(1.22) saturate(1.5) drop-shadow(0 0 14px currentColor); }
+}
+.combatant-sprite{
+  animation: float 3s ease-in-out infinite, plasmaAura 2.4s ease-in-out infinite, plasmaFilter 2.4s ease-in-out infinite !important;
+  border-width: 2px;
+  border-style: solid;
+  background: radial-gradient(circle at 38% 28%,
+    rgba(255,255,255,0.16) 0%,
+    rgba(0,0,0,0.0) 42%,
+    rgba(0,0,0,0.72) 100%);
+}
+/* Inner plasma ring overlay */
+.combatant-sprite::before{
+  content:'';
+  position:absolute;inset:-4px;
+  border-radius:50%;
+  border:1px solid color-mix(in srgb,currentColor 55%,transparent);
+  animation: plasmaAura 2.4s ease-in-out infinite;
+  pointer-events:none;
+}
+.combatant-sprite::after{
+  content:'';
+  position:absolute;inset:8px;
+  border-radius:50%;
+  background: radial-gradient(circle,
+    color-mix(in srgb,currentColor 18%,transparent) 0%,
+    transparent 70%);
+  pointer-events:none;
+}
+
+/* ── 3. AGGRESSIVE SHONEN HUD — kinetic skew & clip-paths ─ */
+
+/* Attack buttons — slanted arcade feel */
+.attack-btn{
+  padding: 10px 14px;
+  border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  transform: skewX(var(--hud-skew));
+  background: rgba(255,255,255,0.04);
+  border: 1px solid;
+  transition: all 0.12s;
+  position: relative;
+  overflow: visible;
+}
+.attack-btn > *{ transform: skewX(calc(-1 * var(--hud-skew))); display:block; }
+.attack-btn:hover:not(:disabled){
+  transform: skewX(var(--hud-skew)) translateY(-3px);
+  background: rgba(255,255,255,0.09);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.6), 0 0 12px color-mix(in srgb,currentColor 40%,transparent);
+}
+/* Sweep-shine on hover */
+.attack-btn::after{
+  content:'';
+  position:absolute;
+  top:0;left:-60%;width:40%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent);
+  transform:skewX(-20deg);
+  transition:left 0.4s ease;
+  pointer-events:none;
+}
+.attack-btn:hover::after{ left:120%; }
+
+/* HP bars — slanted ends */
+.combatant-hp-bg{
+  border-radius: 0;
+  clip-path: polygon(4px 0,100% 0,calc(100% - 4px) 100%,0 100%);
+  height: 9px;
+}
+.combatant-hp-bar{
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+}
+/* Animated light sweep on HP bar */
+.combatant-hp-bar::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.28) 50%,transparent 100%);
+  transform:translateX(-100%);
+  animation:hpShine 3s ease-in-out infinite;
+}
+@keyframes hpShine{
+  0%,60%{ transform:translateX(-100%); }
+  80%   { transform:translateX(100%);  }
+  100%  { transform:translateX(100%);  }
+}
+
+/* Tournament header — kinetic slant strip */
+#tourn-header{
+  clip-path: polygon(0 0,100% 0,100% calc(100% - 8px),calc(100% - 16px) 100%,0 100%);
+  background: linear-gradient(90deg,
+    rgba(245,158,11,0.12),
+    rgba(245,158,11,0.06) 60%,
+    rgba(236,72,153,0.08)) !important;
+  border-bottom: 2px solid rgba(245,158,11,0.35) !important;
+}
+#tourn-header h2{
+  text-shadow: 0 0 16px var(--neon-gold), 0 0 40px var(--neon-gold);
+  letter-spacing: 8px;
+}
+
+/* Battle-actions label strip */
+#battle-actions-label{
+  transform: skewX(var(--hud-skew));
+  letter-spacing: 5px;
+  color: rgba(139,92,246,0.6);
+  text-shadow: 0 0 10px var(--neon-violet);
+}
+
+/* ── 4. CHRONO-GLASSMORPHISM panels ─────────────────────── */
+#battle-actions{
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  border-top: 1px solid var(--glass-border) !important;
+  box-shadow: 0 -12px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(139,92,246,0.12);
+}
+#battle-log{
+  background: rgba(4,2,14,0.68) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(139,92,246,0.1) !important;
+}
+#mm-status-box{
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: 0 0 40px rgba(139,92,246,0.08), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.bracket-match{
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(245,158,11,0.12) !important;
+  transition: all 0.25s;
+}
+.bracket-match.active{
+  border-color: rgba(245,158,11,0.5) !important;
+  box-shadow: 0 0 24px rgba(245,158,11,0.2), inset 0 0 16px rgba(245,158,11,0.04) !important;
+}
+.hub-player-row,.hub-battle-card,.tourn-lobby-card{
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.05) !important;
+}
+.hub-player-row:hover{ border-color: rgba(239,68,68,0.3) !important; }
+.tourn-lobby-card:hover{ border-color: rgba(245,158,11,0.3) !important; }
+
+/* Challenge popup glass */
+#challenge-popup{
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  background: rgba(0,0,0,0.78) !important;
+}
+
+/* Tutorial box glass */
+#tutorial-box{
+  background: rgba(6,4,22,0.82) !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(139,92,246,0.22) !important;
+}
+
+/* ── 5. CHAOS LIGHTNING SIGNATURE NEON ───────────────────── */
+/* Applied when currentColor === chaos palette via type badge */
+.combatant-type[data-type="electric"]{
+  color: var(--chaos-primary);
+  border-color: var(--chaos-primary);
+  text-shadow: 0 0 8px var(--chaos-primary);
+  box-shadow: 0 0 6px var(--chaos-primary);
+}
+
+/* ── 6. BATTLE VS DIVIDER — kinetic energy beam ─────────── */
+#battle-vs{
+  position:relative;
+  font-size:2.2rem;
+  font-weight:900;
+  color:transparent;
+  letter-spacing:4px;
+}
+#battle-vs::before{
+  content:'VS';
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,var(--neon-violet),var(--neon-pink));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 0 10px var(--neon-violet));
+  animation:vsPulse 1.8s ease-in-out infinite;
+}
+@keyframes vsPulse{
+  0%,100%{filter:drop-shadow(0 0 8px var(--neon-violet));}
+  50%{filter:drop-shadow(0 0 22px var(--neon-pink)) drop-shadow(0 0 40px var(--neon-violet));}
+}
+
+/* ── 7. NOTIFICATION KINETIC SLIDE ──────────────────────── */
+.notif{
+  clip-path: polygon(0 0,100% 0,calc(100% - 6px) 100%,0 100%);
+  border-left: 3px solid;
+  border-radius:0;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  background:rgba(0,0,0,0.7) !important;
+}
+
+/* ── 8. START SCREEN UPGRADE ─────────────────────────────── */
+#start{
+  background: radial-gradient(ellipse at 30% 60%, rgba(139,92,246,0.15) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 30%, rgba(236,72,153,0.10) 0%, transparent 50%),
+              linear-gradient(160deg,#0d0520,#060c1a) !important;
+}
+#start button{
+  clip-path: polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  border-radius:0;
+  background:linear-gradient(90deg,var(--neon-violet),var(--neon-pink)) !important;
+  box-shadow:0 0 24px rgba(139,92,246,0.4);
+  letter-spacing:4px;
+  font-weight:900;
+  transform:skewX(var(--hud-skew));
+  transition:all 0.15s;
+}
+#start button:hover{
+  box-shadow:0 0 40px rgba(139,92,246,0.6),0 0 80px rgba(236,72,153,0.3);
+  transform:skewX(var(--hud-skew)) translateY(-2px);
+}
+
+/* ── 9. MATCHMAKING FIND BUTTON ──────────────────────────── */
+#mm-find-btn{
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+  border-radius:0 !important;
+  transform:skewX(var(--hud-skew));
+  letter-spacing:4px;
+  box-shadow:0 0 20px rgba(239,68,68,0.4);
+  transition:all 0.15s;
+}
+#mm-find-btn:hover{
+  transform:skewX(var(--hud-skew)) translateY(-2px);
+  box-shadow:0 0 40px rgba(239,68,68,0.6),0 0 80px rgba(249,115,22,0.3);
+}
+
+/* ── 10. TEAM BAR SLOTS — neon glow upgrade ──────────────── */
+.team-slot{
+  border-radius:4px;
+  clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));
+  backdrop-filter:blur(8px);
+  transition:box-shadow 0.3s,border-color 0.3s;
+}
+.team-slot.alive{
+  box-shadow:0 0 8px rgba(74,222,128,0.4);
+}
+.team-slot.fainted{
+  box-shadow:0 0 8px rgba(239,68,68,0.3);
+}
 #game-canvas{position:fixed;top:0;left:0;z-index:0;}
 
 /* ── Start screen ── */
