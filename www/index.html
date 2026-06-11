@@ -4684,153 +4684,162 @@ function getArchetypeSVG(arch, color){
   const c = color||'#88aaff';
   const u = (Math.random()*1e6|0).toString(36);
 
-  /* Archetype detail overlays painted on top of the figure */
+  /* Archetype armor detail overlays */
   const overlays = {
     'super-speedster':`
-      <!-- hex circuit traces on chest -->
-      <path d="M36,52 L44,46 L56,46 L64,52 L56,58 L44,58 Z" fill="none" stroke="${c}" stroke-width="0.7" stroke-opacity="0.5"/>
-      <circle cx="50" cy="52" r="2.5" fill="${c}" fill-opacity="0.6"/>
-      <!-- energy conduit lines on arms -->
-      <line x1="18" y1="56" x2="10" y2="76" stroke="${c}" stroke-width="1.2" stroke-opacity="0.5"/>
-      <line x1="82" y1="56" x2="90" y2="76" stroke="${c}" stroke-width="1.2" stroke-opacity="0.5"/>
-      <!-- boot stripe -->
-      <line x1="32" y1="172" x2="44" y2="178" stroke="${c}" stroke-width="1" stroke-opacity="0.5"/>
-      <line x1="68" y1="172" x2="56" y2="178" stroke="${c}" stroke-width="1" stroke-opacity="0.5"/>`,
-
+      <path d="M38,56 L44,50 L56,50 L62,56 L56,62 L44,62 Z" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.55"/>
+      <circle cx="50" cy="56" r="2.5" fill="${c}" fill-opacity="0.7"/>
+      <line x1="16" y1="60" x2="6" y2="82" stroke="${c}" stroke-width="1.2" stroke-opacity="0.5"/>
+      <line x1="84" y1="60" x2="94" y2="82" stroke="${c}" stroke-width="1.2" stroke-opacity="0.5"/>
+      <line x1="28" y1="178" x2="40" y2="184" stroke="${c}" stroke-width="1.2" stroke-opacity="0.6"/>
+      <line x1="72" y1="178" x2="60" y2="184" stroke="${c}" stroke-width="1.2" stroke-opacity="0.6"/>`,
     'super-juggernaut':`
-      <!-- pauldron shoulder plates -->
-      <rect x="14" y="40" width="14" height="8" rx="1" fill="${c}" fill-opacity="0.25" stroke="${c}" stroke-width="0.6" stroke-opacity="0.6"/>
-      <rect x="72" y="40" width="14" height="8" rx="1" fill="${c}" fill-opacity="0.25" stroke="${c}" stroke-width="0.6" stroke-opacity="0.6"/>
-      <!-- chest plate seam -->
-      <rect x="32" y="45" width="36" height="36" rx="2" fill="none" stroke="${c}" stroke-width="0.6" stroke-opacity="0.35"/>
-      <line x1="50" y1="45" x2="50" y2="81" stroke="${c}" stroke-width="0.5" stroke-opacity="0.4"/>
-      <!-- belly plate -->
-      <rect x="34" y="82" width="32" height="12" rx="1" fill="${c}" fill-opacity="0.12" stroke="${c}" stroke-width="0.5" stroke-opacity="0.35"/>
-      <!-- rivet dots -->
-      <circle cx="36" cy="47" r="1.5" fill="${c}" fill-opacity="0.6"/>
-      <circle cx="64" cy="47" r="1.5" fill="${c}" fill-opacity="0.6"/>
-      <circle cx="36" cy="79" r="1.5" fill="${c}" fill-opacity="0.6"/>
-      <circle cx="64" cy="79" r="1.5" fill="${c}" fill-opacity="0.6"/>
-      <!-- knee guards -->
-      <rect x="31" y="157" width="14" height="8" rx="1" fill="${c}" fill-opacity="0.3" stroke="${c}" stroke-width="0.6" stroke-opacity="0.5"/>
-      <rect x="55" y="157" width="14" height="8" rx="1" fill="${c}" fill-opacity="0.3" stroke="${c}" stroke-width="0.6" stroke-opacity="0.5"/>`,
-
+      <rect x="10" y="44" width="16" height="10" rx="2" fill="${c}" fill-opacity="0.28" stroke="${c}" stroke-width="0.7" stroke-opacity="0.7"/>
+      <rect x="74" y="44" width="16" height="10" rx="2" fill="${c}" fill-opacity="0.28" stroke="${c}" stroke-width="0.7" stroke-opacity="0.7"/>
+      <rect x="30" y="50" width="40" height="38" rx="2" fill="none" stroke="${c}" stroke-width="0.7" stroke-opacity="0.4"/>
+      <line x1="50" y1="50" x2="50" y2="88" stroke="${c}" stroke-width="0.6" stroke-opacity="0.4"/>
+      <rect x="32" y="88" width="36" height="14" rx="1" fill="${c}" fill-opacity="0.12" stroke="${c}" stroke-width="0.5" stroke-opacity="0.35"/>
+      <circle cx="34" cy="54" r="2" fill="${c}" fill-opacity="0.65"/>
+      <circle cx="66" cy="54" r="2" fill="${c}" fill-opacity="0.65"/>
+      <circle cx="34" cy="86" r="2" fill="${c}" fill-opacity="0.65"/>
+      <circle cx="66" cy="86" r="2" fill="${c}" fill-opacity="0.65"/>
+      <rect x="27" y="163" width="16" height="10" rx="2" fill="${c}" fill-opacity="0.35" stroke="${c}" stroke-width="0.7" stroke-opacity="0.6"/>
+      <rect x="57" y="163" width="16" height="10" rx="2" fill="${c}" fill-opacity="0.35" stroke="${c}" stroke-width="0.7" stroke-opacity="0.6"/>`,
     'super-assassin':`
-      <!-- cloak collar -->
-      <path d="M36,38 Q50,44 64,38" fill="none" stroke="${c}" stroke-width="1" stroke-opacity="0.5"/>
-      <!-- dashed center seam -->
-      <line x1="50" y1="38" x2="50" y2="100" stroke="${c}" stroke-width="0.6" stroke-opacity="0.55" stroke-dasharray="4,3"/>
-      <!-- blade on left arm -->
-      <path d="M4,108 L2,130 L10,126 L10,108 Z" fill="${c}" fill-opacity="0.6" stroke="${c}" stroke-width="0.5"/>
-      <!-- shoulder edge cut -->
-      <line x1="18" y1="42" x2="14" y2="50" stroke="${c}" stroke-width="1.4" stroke-opacity="0.7"/>
-      <line x1="82" y1="42" x2="86" y2="50" stroke="${c}" stroke-width="1.4" stroke-opacity="0.7"/>
-      <!-- thigh bandage wraps -->
-      <line x1="30" y1="125" x2="48" y2="122" stroke="${c}" stroke-width="0.7" stroke-opacity="0.4"/>
-      <line x1="30" y1="133" x2="48" y2="130" stroke="${c}" stroke-width="0.7" stroke-opacity="0.4"/>
-      <line x1="52" y1="122" x2="70" y2="125" stroke="${c}" stroke-width="0.7" stroke-opacity="0.4"/>
-      <line x1="52" y1="130" x2="70" y2="133" stroke="${c}" stroke-width="0.7" stroke-opacity="0.4"/>`,
-
+      <path d="M34,42 Q50,49 66,42" fill="none" stroke="${c}" stroke-width="1.1" stroke-opacity="0.55"/>
+      <line x1="50" y1="42" x2="50" y2="104" stroke="${c}" stroke-width="0.7" stroke-opacity="0.5" stroke-dasharray="4,3"/>
+      <path d="M1,112 L0,136 L8,133 L8,112 Z" fill="${c}" fill-opacity="0.65" stroke="${c}" stroke-width="0.5"/>
+      <line x1="15" y1="46" x2="10" y2="55" stroke="${c}" stroke-width="1.6" stroke-opacity="0.8"/>
+      <line x1="85" y1="46" x2="90" y2="55" stroke="${c}" stroke-width="1.6" stroke-opacity="0.8"/>
+      <line x1="27" y1="130" x2="47" y2="126" stroke="${c}" stroke-width="0.8" stroke-opacity="0.45"/>
+      <line x1="27" y1="139" x2="47" y2="135" stroke="${c}" stroke-width="0.8" stroke-opacity="0.45"/>
+      <line x1="53" y1="126" x2="73" y2="130" stroke="${c}" stroke-width="0.8" stroke-opacity="0.45"/>
+      <line x1="53" y1="135" x2="73" y2="139" stroke="${c}" stroke-width="0.8" stroke-opacity="0.45"/>`,
     'super-elemental':`
-      <!-- outer aura ring -->
-      <ellipse cx="50" cy="100" rx="42" ry="85" fill="none" stroke="${c}" stroke-width="0.7" stroke-opacity="0.2"/>
-      <!-- rune circle at chest -->
-      <circle cx="50" cy="62" r="18" fill="none" stroke="${c}" stroke-width="0.6" stroke-opacity="0.35"/>
-      <circle cx="50" cy="62" r="10" fill="none" stroke="${c}" stroke-width="0.4" stroke-opacity="0.4"/>
-      <!-- cardinal lines inside rune -->
-      <line x1="50" y1="44" x2="50" y2="80" stroke="${c}" stroke-width="0.5" stroke-opacity="0.3"/>
-      <line x1="32" y1="62" x2="68" y2="62" stroke="${c}" stroke-width="0.5" stroke-opacity="0.3"/>
-      <!-- energy tendrils from hands -->
-      <path d="M4,116 Q0,108 6,100 Q12,92 8,84" fill="none" stroke="${c}" stroke-width="1" stroke-opacity="0.55"/>
-      <path d="M96,116 Q100,108 94,100 Q88,92 92,84" fill="none" stroke="${c}" stroke-width="1" stroke-opacity="0.55"/>
-      <!-- floating rune triangle -->
-      <polygon points="50,28 56,36 44,36" fill="none" stroke="${c}" stroke-width="0.7" stroke-opacity="0.6"/>`
+      <ellipse cx="50" cy="104" rx="44" ry="86" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.18"/>
+      <circle cx="50" cy="66" r="20" fill="none" stroke="${c}" stroke-width="0.7" stroke-opacity="0.38"/>
+      <circle cx="50" cy="66" r="11" fill="none" stroke="${c}" stroke-width="0.5" stroke-opacity="0.45"/>
+      <line x1="50" y1="46" x2="50" y2="86" stroke="${c}" stroke-width="0.5" stroke-opacity="0.32"/>
+      <line x1="30" y1="66" x2="70" y2="66" stroke="${c}" stroke-width="0.5" stroke-opacity="0.32"/>
+      <path d="M2,120 Q-4,110 3,100 Q10,90 5,78" fill="none" stroke="${c}" stroke-width="1.2" stroke-opacity="0.6"/>
+      <path d="M98,120 Q104,110 97,100 Q90,90 95,78" fill="none" stroke="${c}" stroke-width="1.2" stroke-opacity="0.6"/>
+      <polygon points="50,22 57,33 43,33" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.65"/>`
   };
-
-  const overlay = overlays[arch] || overlays['super-speedster'];
+  const overlay = overlays[arch]||overlays['super-speedster'];
 
   return `<svg viewBox="0 0 100 210" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%">
-  <defs>
-    <linearGradient id="fg${u}" x1="15%" y1="0%" x2="85%" y2="100%">
-      <stop offset="0%" stop-color="${c}" stop-opacity="0.92"/>
-      <stop offset="55%" stop-color="${c}" stop-opacity="0.6"/>
-      <stop offset="100%" stop-color="${c}" stop-opacity="0.22"/>
-    </linearGradient>
-    <linearGradient id="rl${u}" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#fff" stop-opacity="0.22"/>
-      <stop offset="38%" stop-color="#fff" stop-opacity="0.07"/>
-      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
-    </linearGradient>
-    <filter id="gw${u}" x="-40%" y="-20%" width="180%" height="140%">
-      <feGaussianBlur stdDeviation="3.5" result="b"/>
-      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-  </defs>
+<defs>
+  <linearGradient id="fg${u}" x1="18%" y1="0%" x2="82%" y2="100%">
+    <stop offset="0%" stop-color="${c}" stop-opacity="0.95"/>
+    <stop offset="50%" stop-color="${c}" stop-opacity="0.72"/>
+    <stop offset="100%" stop-color="${c}" stop-opacity="0.28"/>
+  </linearGradient>
+  <linearGradient id="rl${u}" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#fff" stop-opacity="0.28"/>
+    <stop offset="30%" stop-color="#fff" stop-opacity="0.1"/>
+    <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="sh${u}" x1="100%" y1="0%" x2="0%" y2="0%">
+    <stop offset="0%" stop-color="#000" stop-opacity="0.38"/>
+    <stop offset="55%" stop-color="#000" stop-opacity="0"/>
+  </linearGradient>
+</defs>
 
-  <!-- ambient body glow -->
-  <ellipse cx="50" cy="110" rx="35" ry="82" fill="${c}" fill-opacity="0.07"/>
+<!-- ambient glow -->
+<ellipse cx="50" cy="112" rx="34" ry="78" fill="${c}" fill-opacity="0.07"/>
 
-  <!-- ── HEAD ── -->
-  <circle cx="50" cy="20" r="13" fill="url(#fg${u})"/>
-  <circle cx="50" cy="20" r="13" fill="url(#rl${u})"/>
-  <!-- face details -->
-  <path d="M42,18 Q44,15 48,17" fill="none" stroke="#fff" stroke-width="0.8" stroke-opacity="0.3"/>
-  <path d="M52,18 Q56,15 58,17" fill="none" stroke="#fff" stroke-width="0.8" stroke-opacity="0.3"/>
-  <path d="M45,23 Q50,26 55,23" fill="none" stroke="#fff" stroke-width="0.7" stroke-opacity="0.25"/>
+<!-- ── HEAD — proper oval, wider at cheeks, jaw taper ── -->
+<path d="M50,5 C43,5 37,9 35,15 C33,21 34,28 37,32 C39,36 43,38 46,39 C47,40 48,40 50,40 C52,40 53,40 54,39 C57,38 61,36 63,32 C66,28 67,21 65,15 C63,9 57,5 50,5 Z" fill="url(#fg${u})"/>
+<path d="M50,5 C43,5 37,9 35,15 C33,21 34,28 37,32 C39,36 43,38 46,39 C47,40 48,40 50,40 C52,40 53,40 54,39 C57,38 61,36 63,32 C66,28 67,21 65,15 C63,9 57,5 50,5 Z" fill="url(#rl${u})"/>
+<path d="M50,5 C43,5 37,9 35,15 C33,21 34,28 37,32 C39,36 43,38 46,39 C47,40 48,40 50,40 C52,40 53,40 54,39 C57,38 61,36 63,32 C66,28 67,21 65,15 C63,9 57,5 50,5 Z" fill="url(#sh${u})"/>
+<!-- brow ridge -->
+<path d="M38,18 Q43,15 48,17" fill="none" stroke="#fff" stroke-width="0.9" stroke-opacity="0.3"/>
+<path d="M52,17 Q57,15 62,18" fill="none" stroke="#fff" stroke-width="0.9" stroke-opacity="0.3"/>
+<!-- mouth -->
+<path d="M44,30 Q50,33 56,30" fill="none" stroke="#fff" stroke-width="0.7" stroke-opacity="0.22"/>
+<!-- nose shadow -->
+<line x1="50" y1="22" x2="50" y2="28" stroke="#000" stroke-width="0.6" stroke-opacity="0.2"/>
 
-  <!-- ── NECK ── -->
-  <path d="M45,32 L55,32 L54,40 L46,40 Z" fill="url(#fg${u})"/>
+<!-- ── NECK — tapered, visible cords ── -->
+<path d="M43,37 C42,40 42,43 43,46 L57,46 C58,43 58,40 57,37 Z" fill="url(#fg${u})"/>
+<line x1="46" y1="37" x2="46" y2="46" stroke="#000" stroke-width="0.5" stroke-opacity="0.18"/>
+<line x1="54" y1="37" x2="54" y2="46" stroke="#000" stroke-width="0.5" stroke-opacity="0.18"/>
 
-  <!-- ── TORSO ── -->
-  <path d="M27,40 L73,40 L75,96 C68,101 60,103 50,103 C40,103 32,101 25,96 Z" fill="url(#fg${u})"/>
-  <path d="M27,40 L73,40 L75,96 C68,101 60,103 50,103 C40,103 32,101 25,96 Z" fill="url(#rl${u})"/>
+<!-- ── TORSO — broad shoulders → waist pinch → hip flare ── -->
+<path d="
+  M19,46 C14,48 11,53 11,59 C11,64 14,68 18,70
+  C17,78 17,86 18,93 C19,98 22,102 27,104
+  Q38,108 50,109 Q62,108 73,104
+  C78,102 81,98 82,93 C83,86 83,78 82,70
+  C86,68 89,64 89,59 C89,53 86,48 81,46
+  C74,43 63,41 50,41 C37,41 26,43 19,46 Z
+" fill="url(#fg${u})"/>
+<path d="
+  M19,46 C14,48 11,53 11,59 C11,64 14,68 18,70
+  C17,78 17,86 18,93 C19,98 22,102 27,104
+  Q38,108 50,109 Q62,108 73,104
+  C78,102 81,98 82,93 C83,86 83,78 82,70
+  C86,68 89,64 89,59 C89,53 86,48 81,46
+  C74,43 63,41 50,41 C37,41 26,43 19,46 Z
+" fill="url(#rl${u})"/>
+<path d="
+  M19,46 C14,48 11,53 11,59 C11,64 14,68 18,70
+  C17,78 17,86 18,93 C19,98 22,102 27,104
+  Q38,108 50,109 Q62,108 73,104
+  C78,102 81,98 82,93 C83,86 83,78 82,70
+  C86,68 89,64 89,59 C89,53 86,48 81,46
+  C74,43 63,41 50,41 C37,41 26,43 19,46 Z
+" fill="url(#sh${u})"/>
+<!-- pec line -->
+<path d="M30,60 Q50,66 70,60" fill="none" stroke="#fff" stroke-width="0.6" stroke-opacity="0.14"/>
+<!-- ab lines -->
+<line x1="50" y1="68" x2="50" y2="106" stroke="#000" stroke-width="0.5" stroke-opacity="0.22"/>
+<path d="M38,78 Q50,80 62,78" fill="none" stroke="#000" stroke-width="0.5" stroke-opacity="0.2"/>
+<path d="M37,90 Q50,92 63,90" fill="none" stroke="#000" stroke-width="0.5" stroke-opacity="0.2"/>
 
-  <!-- ── SHOULDERS ── -->
-  <ellipse cx="23" cy="44" rx="8" ry="7" fill="url(#fg${u})"/>
-  <ellipse cx="77" cy="44" rx="8" ry="7" fill="url(#fg${u})"/>
+<!-- ── LEFT UPPER ARM — bicep bulge ── -->
+<path d="M13,57 C8,59 5,65 4,73 C3,81 5,88 9,92 C12,95 16,95 19,93 C21,91 22,87 22,80 C22,72 21,65 18,60 Z" fill="url(#fg${u})"/>
+<!-- ── RIGHT UPPER ARM ── -->
+<path d="M87,57 C92,59 95,65 96,73 C97,81 95,88 91,92 C88,95 84,95 81,93 C79,91 78,87 78,80 C78,72 79,65 82,60 Z" fill="url(#fg${u})"/>
+<path d="M87,57 C92,59 95,65 96,73 C97,81 95,88 91,92 C88,95 84,95 81,93 C79,91 78,87 78,80 C78,72 79,65 82,60 Z" fill="url(#sh${u})"/>
 
-  <!-- ── LEFT UPPER ARM ── -->
-  <path d="M17,46 L7,62 L5,88 L15,90 L15,66 L21,50 Z" fill="url(#fg${u})"/>
-  <!-- ── RIGHT UPPER ARM ── -->
-  <path d="M83,46 L93,62 L95,88 L85,90 L85,66 L79,50 Z" fill="url(#fg${u})"/>
+<!-- ── LEFT FOREARM — tapers to wrist ── -->
+<path d="M7,90 C5,95 4,104 5,112 C6,118 9,122 13,123 C17,124 20,121 21,116 C22,110 22,101 20,93 Z" fill="url(#fg${u})"/>
+<!-- ── RIGHT FOREARM ── -->
+<path d="M93,90 C95,95 96,104 95,112 C94,118 91,122 87,123 C83,124 80,121 79,116 C78,110 78,101 80,93 Z" fill="url(#fg${u})"/>
+<path d="M93,90 C95,95 96,104 95,112 C94,118 91,122 87,123 C83,124 80,121 79,116 C78,110 78,101 80,93 Z" fill="url(#sh${u})"/>
 
-  <!-- ── LEFT ELBOW ── -->
-  <ellipse cx="10" cy="90" rx="6" ry="5" fill="url(#fg${u})"/>
-  <!-- ── RIGHT ELBOW ── -->
-  <ellipse cx="90" cy="90" rx="6" ry="5" fill="url(#fg${u})"/>
+<!-- ── HANDS — fist shape ── -->
+<path d="M5,121 C4,124 4,129 7,131 C10,133 14,133 17,131 C20,129 21,126 20,122 C19,119 16,117 13,117 C9,117 6,118 5,121 Z" fill="url(#fg${u})"/>
+<path d="M95,121 C96,124 96,129 93,131 C90,133 86,133 83,131 C80,129 79,126 80,122 C81,119 84,117 87,117 C91,117 94,118 95,121 Z" fill="url(#fg${u})"/>
+<path d="M95,121 C96,124 96,129 93,131 C90,133 86,133 83,131 C80,129 79,126 80,122 C81,119 84,117 87,117 C91,117 94,118 95,121 Z" fill="url(#sh${u})"/>
 
-  <!-- ── LEFT FOREARM ── -->
-  <path d="M5,88 L3,116 L13,118 L15,90 Z" fill="url(#fg${u})"/>
-  <!-- ── RIGHT FOREARM ── -->
-  <path d="M95,88 L97,116 L87,118 L85,90 Z" fill="url(#fg${u})"/>
+<!-- ── PELVIS — hip shelf ── -->
+<path d="M25,107 Q50,114 75,107 L72,122 Q50,128 28,122 Z" fill="url(#fg${u})"/>
 
-  <!-- ── HANDS ── -->
-  <ellipse cx="8" cy="120" rx="6" ry="5" fill="url(#fg${u})"/>
-  <ellipse cx="92" cy="120" rx="6" ry="5" fill="url(#fg${u})"/>
+<!-- ── LEFT THIGH — quad mass ── -->
+<path d="M28,120 C23,122 20,130 20,140 C20,150 22,158 27,163 C31,167 37,167 41,164 C45,161 47,154 47,144 C47,134 45,126 41,121 C38,118 32,118 28,120 Z" fill="url(#fg${u})"/>
+<!-- ── RIGHT THIGH ── -->
+<path d="M72,120 C77,122 80,130 80,140 C80,150 78,158 73,163 C69,167 63,167 59,164 C55,161 53,154 53,144 C53,134 55,126 59,121 C62,118 68,118 72,120 Z" fill="url(#fg${u})"/>
+<path d="M72,120 C77,122 80,130 80,140 C80,150 78,158 73,163 C69,167 63,167 59,164 C55,161 53,154 53,144 C53,134 55,126 59,121 C62,118 68,118 72,120 Z" fill="url(#sh${u})"/>
 
-  <!-- ── PELVIS ── -->
-  <path d="M27,101 L73,101 L69,116 L31,116 Z" fill="url(#fg${u})"/>
+<!-- ── KNEES — kneecap oval ── -->
+<path d="M21,160 C20,164 21,170 24,173 C28,176 35,176 39,173 C43,170 44,164 43,160 C40,163 36,165 33,165 C30,165 23,163 21,160 Z" fill="url(#fg${u})"/>
+<path d="M79,160 C80,164 79,170 76,173 C72,176 65,176 61,173 C57,170 56,164 57,160 C60,163 64,165 67,165 C70,165 77,163 79,160 Z" fill="url(#fg${u})"/>
 
-  <!-- ── LEFT THIGH ── -->
-  <path d="M31,114 L49,114 L47,162 L29,162 Z" fill="url(#fg${u})"/>
-  <!-- ── RIGHT THIGH ── -->
-  <path d="M69,114 L51,114 L53,162 L71,162 Z" fill="url(#fg${u})"/>
+<!-- ── LEFT SHIN — calf swell then taper ── -->
+<path d="M21,170 C20,176 20,184 22,191 C24,196 27,199 32,200 C36,201 40,199 42,195 C44,191 44,184 43,176 C41,170 38,166 34,165 C30,165 22,167 21,170 Z" fill="url(#fg${u})"/>
+<!-- ── RIGHT SHIN ── -->
+<path d="M79,170 C80,176 80,184 78,191 C76,196 73,199 68,200 C64,201 60,199 58,195 C56,191 56,184 57,176 C59,170 62,166 66,165 C70,165 78,167 79,170 Z" fill="url(#fg${u})"/>
+<path d="M79,170 C80,176 80,184 78,191 C76,196 73,199 68,200 C64,201 60,199 58,195 C56,191 56,184 57,176 C59,170 62,166 66,165 C70,165 78,167 79,170 Z" fill="url(#sh${u})"/>
 
-  <!-- ── KNEES ── -->
-  <ellipse cx="38" cy="164" rx="9" ry="6" fill="url(#fg${u})"/>
-  <ellipse cx="62" cy="164" rx="9" ry="6" fill="url(#fg${u})"/>
+<!-- ── FEET — shoe profile ── -->
+<path d="M20,197 C18,199 17,202 18,205 C19,207 22,208 28,209 C35,210 42,209 46,207 C49,205 49,202 46,199 C44,197 41,196 37,196 Z" fill="url(#fg${u})"/>
+<path d="M80,197 C82,199 83,202 82,205 C81,207 78,208 72,209 C65,210 58,209 54,207 C51,205 51,202 54,199 C56,197 59,196 63,196 Z" fill="url(#fg${u})"/>
+<path d="M80,197 C82,199 83,202 82,205 C81,207 78,208 72,209 C65,210 58,209 54,207 C51,205 51,202 54,199 C56,197 59,196 63,196 Z" fill="url(#sh${u})"/>
 
-  <!-- ── LEFT SHIN ── -->
-  <path d="M30,168 L46,168 L44,198 L28,196 Z" fill="url(#fg${u})"/>
-  <!-- ── RIGHT SHIN ── -->
-  <path d="M70,168 L54,168 L56,198 L72,196 Z" fill="url(#fg${u})"/>
-
-  <!-- ── FEET ── -->
-  <path d="M24,194 L46,198 L44,208 L18,204 Z" fill="url(#fg${u})"/>
-  <path d="M76,194 L54,198 L56,208 L82,204 Z" fill="url(#fg${u})"/>
-
-  <!-- ── ARCHETYPE ARMOR DETAILS ── -->
-  ${overlay}
+<!-- ── ARCHETYPE OVERLAY ── -->
+${overlay}
 </svg>`;
 }
 
