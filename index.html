@@ -1103,67 +1103,125 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
   <div id="brb-sub" style="position:relative;font-size:0.85rem;letter-spacing:6px;opacity:0;transform:translateY(20px);transition:all 0.4s 0.3s;color:#aaa;margin-top:12px;text-align:center;"></div>
 </div>
 
-<!-- Loading Screen -->
-<div id="loading-screen" style="position:fixed;inset:0;z-index:9999;overflow:hidden;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s;">
+<!-- ═══════════════════════════════════════════
+     SUPERFORCE — LOADING SCREEN
+     Simple, reliable, no external deps
+════════════════════════════════════════════ -->
+<style>
+#sf-load{
+  position:fixed;inset:0;z-index:9999;
+  background:#000;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  transition:opacity 0.8s ease;
+  font-family:'Segoe UI',sans-serif;
+}
+#sf-load canvas{position:absolute;inset:0;width:100%;height:100%;}
+#sf-load .inner{position:relative;display:flex;flex-direction:column;align-items:center;gap:0;}
+#sf-load .bolt{font-size:4.5rem;animation:sfBolt 2s ease-in-out infinite;margin-bottom:16px;}
+@keyframes sfBolt{
+  0%,100%{filter:drop-shadow(0 0 20px #8b5cf6);transform:scale(1);}
+  50%{filter:drop-shadow(0 0 50px #f59e0b) drop-shadow(0 0 80px #ec4899);transform:scale(1.12) translateY(-4px);}
+}
+#sf-load .title{
+  font-size:clamp(2rem,7vw,4rem);font-weight:900;letter-spacing:10px;
+  background:linear-gradient(90deg,#f59e0b,#ec4899,#8b5cf6,#00d4ff,#f59e0b);
+  background-size:400%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:sfTitle 4s linear infinite;
+  margin-bottom:8px;
+}
+@keyframes sfTitle{0%{background-position:0%}100%{background-position:400%}}
+#sf-load .tag{font-size:0.55rem;letter-spacing:6px;color:rgba(139,92,246,0.6);margin-bottom:36px;}
+#sf-load .bar-wrap{width:min(280px,72vw);margin-bottom:10px;}
+#sf-load .bar-track{height:2px;background:rgba(255,255,255,0.08);border-radius:1px;overflow:hidden;}
+#sf-load .bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);border-radius:1px;transition:width 0.4s ease;box-shadow:0 0 8px #8b5cf6;}
+#sf-load .bar-row{display:flex;justify-content:space-between;margin-top:8px;}
+#sf-load .bar-msg{font-size:0.48rem;letter-spacing:3px;color:rgba(139,92,246,0.55);}
+#sf-load .bar-pct{font-size:0.48rem;letter-spacing:2px;color:rgba(255,255,255,0.18);}
+#sf-load .ver{position:absolute;bottom:18px;font-size:0.42rem;letter-spacing:3px;color:rgba(255,255,255,0.1);}
+</style>
 
-  <!-- Animated star field canvas -->
-  <canvas id="ls-canvas" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
-
-  <!-- Deep space gradient -->
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(60,10,120,0.55) 0%,rgba(10,4,30,0.95) 70%);pointer-events:none;"></div>
-
-  <!-- Lightning bolt icon -->
-  <div id="ls-bolt" style="position:relative;font-size:5rem;filter:drop-shadow(0 0 32px #8b5cf6) drop-shadow(0 0 80px #ec4899);animation:lsBoltPulse 1.8s ease-in-out infinite;margin-bottom:18px;">⚡</div>
-
-  <!-- Title -->
-  <div id="ls-title" style="position:relative;font-size:clamp(2.2rem,8vw,4.5rem);font-weight:900;letter-spacing:12px;background:linear-gradient(90deg,#f59e0b,#ec4899,#8b5cf6,#00d4ff);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:lsGrad 3s linear infinite;margin-bottom:6px;">SUPERFORCE</div>
-
-  <!-- Tagline -->
-  <div style="position:relative;font-size:0.62rem;letter-spacing:6px;color:rgba(139,92,246,0.7);margin-bottom:40px;text-shadow:0 0 12px #8b5cf6;">CATCH · BATTLE · DOMINATE</div>
-
-  <!-- Progress bar container -->
-  <div style="position:relative;width:min(320px,80vw);">
-    <!-- Track -->
-    <div style="width:100%;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-bottom:10px;">
-      <div id="load-bar" style="height:100%;width:0%;border-radius:2px;background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);background-size:200%;animation:lsBarShine 1.5s linear infinite;transition:width 0.35s ease;box-shadow:0 0 10px #8b5cf6;"></div>
-    </div>
-    <!-- Status text -->
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <div id="load-text" style="font-size:0.52rem;letter-spacing:4px;color:rgba(139,92,246,0.6);">INITIALIZING...</div>
-      <div id="load-pct" style="font-size:0.52rem;letter-spacing:2px;color:rgba(255,255,255,0.2);">0%</div>
+<div id="sf-load">
+  <canvas id="sf-stars"></canvas>
+  <div class="inner">
+    <div class="bolt">⚡</div>
+    <div class="title">SUPERFORCE</div>
+    <div class="tag">CATCH · BATTLE · DOMINATE</div>
+    <div class="bar-wrap">
+      <div class="bar-track"><div class="bar-fill" id="load-bar"></div></div>
+      <div class="bar-row">
+        <span class="bar-msg" id="load-text">LOADING...</span>
+        <span class="bar-pct" id="load-pct">0%</span>
+      </div>
     </div>
   </div>
-
-  <!-- Version tag -->
-  <div style="position:absolute;bottom:20px;font-size:0.48rem;letter-spacing:3px;color:rgba(255,255,255,0.12);">v2.0 · SOLO MODE</div>
-
-  <style>
-    @keyframes lsBoltPulse{0%,100%{transform:scale(1) translateY(0);filter:drop-shadow(0 0 24px #8b5cf6) drop-shadow(0 0 60px #ec4899);}50%{transform:scale(1.15) translateY(-6px);filter:drop-shadow(0 0 48px #f59e0b) drop-shadow(0 0 100px #ec4899);}}
-    @keyframes lsGrad{0%{background-position:0%}100%{background-position:300%}}
-    @keyframes lsBarShine{0%{background-position:200% center}100%{background-position:-200% center}}
-  </style>
+  <div class="ver">SUPERFORCE v2 · SOLO</div>
 </div>
 
 <script>
-// Star field for loading screen
+// Stars — self-contained, no globals needed
 (function(){
-  const c=document.getElementById('ls-canvas');
-  const ctx=c.getContext('2d');
-  let stars=[];
-  function resize(){ c.width=window.innerWidth; c.height=window.innerHeight; }
-  resize(); window.addEventListener('resize',resize);
-  for(let i=0;i<180;i++) stars.push({x:Math.random(),y:Math.random(),r:Math.random()*1.4+0.2,s:Math.random()*0.4+0.1,p:Math.random()*Math.PI*2});
+  var c=document.getElementById('sf-stars');
+  if(!c)return;
+  var ctx=c.getContext('2d');
+  var stars=[];
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
+  resize();
+  window.addEventListener('resize',resize);
+  for(var i=0;i<160;i++)
+    stars.push({x:Math.random(),y:Math.random(),r:0.3+Math.random()*1.2,s:0.1+Math.random()*0.4,p:Math.random()*6.28});
+  var running=true;
   function draw(){
+    if(!running)return;
     ctx.clearRect(0,0,c.width,c.height);
-    const t=performance.now()/1000;
-    stars.forEach(s=>{
-      const a=0.3+0.5*Math.abs(Math.sin(t*s.s+s.p));
-      ctx.beginPath(); ctx.arc(s.x*c.width,s.y*c.height,s.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill();
-    });
+    var t=Date.now()/1000;
+    for(var i=0;i<stars.length;i++){
+      var s=stars[i];
+      var a=0.25+0.55*Math.abs(Math.sin(t*s.s+s.p));
+      ctx.beginPath();
+      ctx.arc(s.x*c.width,s.y*c.height,s.r,0,6.28);
+      ctx.fillStyle='rgba(255,255,255,'+a.toFixed(2)+')';
+      ctx.fill();
+    }
     requestAnimationFrame(draw);
   }
   draw();
+  // Stop star animation once game starts to save GPU
+  window._stopStars=function(){running=false; ctx.clearRect(0,0,c.width,c.height);};
+})();
+</script>
+
+<script>
+// Loading progress — drives the bar with real steps
+(function(){
+  var steps=[
+    [15,'LOADING ASSETS...'],
+    [35,'BUILDING WORLD...'],
+    [55,'SPAWNING SUPERS...'],
+    [72,'SETTING UP SYSTEMS...'],
+    [88,'ALMOST READY...'],
+    [100,'WELCOME TO SUPERFORCE!']
+  ];
+  var i=0;
+  function tick(){
+    if(i>=steps.length){
+      setTimeout(function(){
+        var el=document.getElementById('sf-load');
+        if(el){el.style.opacity='0';setTimeout(function(){el.style.display='none';if(window._stopStars)window._stopStars();},800);}
+      },400);
+      return;
+    }
+    var step=steps[i++];
+    var bar=document.getElementById('load-bar');
+    var msg=document.getElementById('load-text');
+    var pct=document.getElementById('load-pct');
+    if(bar)bar.style.width=step[0]+'%';
+    if(msg)msg.textContent=step[1];
+    if(pct)pct.textContent=step[0]+'%';
+    setTimeout(tick, i===steps.length ? 600 : 300+Math.random()*200);
+  }
+  tick();
 })();
 </script>
 
@@ -3746,36 +3804,18 @@ document.getElementById('trainer-name').focus();
 setInterval(()=>{ if(myId) saveGame(); }, 30000);
 
 // ── WebSocket ─────────────────────────────────────────────────────────────────
+const _isOffline = location.hostname.includes('github.io') || location.protocol==='file:';
+
 function initWS(){
-  // On GitHub Pages (no server), run in offline solo mode
-  if(location.hostname.includes('github.io')||location.protocol==='file:'){
-    const fakeId = 'offline-' + Math.random().toString(36).slice(2,8);
-    ws = {
-      send: ()=>{},
-      close: ()=>{},
-      readyState: 1,
-      onopen: null,
-      onmessage: null,
-      onerror: null
-    };
-    setTimeout(()=>{
-      // Fire fake init so myId is set and the game world unlocks
-      if(ws.onmessage){
-        ws.onmessage({ data: JSON.stringify({
-          type: 'init',
-          id: fakeId,
-          players: []
-        })});
-      }
-      if(typeof notify==='function') notify('Playing offline — solo mode ⚡','warn');
-    }, 600);
-    return;
+  if(_isOffline){
+    ws = {send:()=>{}, close:()=>{}, readyState:1, onmessage:null, onerror:null};
+  } else {
+    const proto = location.protocol==='https:'?'wss:':'ws:';
+    const port  = location.protocol==='https:'?'':':8080';
+    try{ ws = new WebSocket(`${proto}//${location.hostname}${port}`); }
+    catch(e){ ws = {send:()=>{},close:()=>{},readyState:0,onmessage:null,onerror:null}; }
   }
-  const proto=location.protocol==='https:'?'wss:':'ws:';
-  const port =location.protocol==='https:'?'':':8080';
-  try{ ws=new WebSocket(`${proto}//${location.hostname}${port}`); }
-  catch(e){ ws={send:()=>{},close:()=>{},readyState:0}; return; }
-  ws.onerror=()=>notify('Cannot connect to server — solo mode','warn');
+  ws.onerror=()=>notify('Cannot connect to server','warn');
 
   ws.onmessage=raw=>{
     const msg=JSON.parse(raw.data);
@@ -3877,6 +3917,18 @@ function initWS(){
         break;
     }
   };
+
+  // Fire fake init AFTER ws.onmessage is set so it actually runs
+  if(_isOffline){
+    setTimeout(()=>{
+      ws.onmessage({ data: JSON.stringify({
+        type:'init',
+        id:'offline-'+Math.random().toString(36).slice(2,8),
+        players:[]
+      })});
+      notify('Playing offline ⚡','warn');
+    }, 100);
+  }
 }
 
 // ── Notify helper ─────────────────────────────────────────────────────────────
