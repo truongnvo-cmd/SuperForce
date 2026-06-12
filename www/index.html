@@ -11061,7 +11061,7 @@ function initFactionVaultHooks(){
   };
 
   // Draw territory + vault blip on minimap
-  const _origDM = window.drawMinimap || drawMinimap;
+  const _origDM = window.drawMinimap || function(){};
   window.drawMinimap = function(){
     _origDM();
     // Faction zone overlay
