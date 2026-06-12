@@ -1296,12 +1296,7 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
 .shop-item-desc{font-size:0.5rem;color:#666;margin-top:2px;}
 .shop-item-cost{font-size:0.65rem;font-weight:700;color:#f59e0b;white-space:nowrap;}
 
-/* ── LOGIN STREAK ── */
-#streak-banner{position:fixed;top:0;left:0;right:0;z-index:200;background:linear-gradient(90deg,#b45309,#f59e0b,#b45309);color:#000;text-align:center;font-size:0.6rem;font-weight:900;letter-spacing:3px;padding:8px;display:none;animation:slideDown 0.4s ease;}
 @keyframes slideDown{from{transform:translateY(-100%)}to{transform:translateY(0)}}
-.streak-day{width:36px;height:36px;border-radius:50%;border:2px solid #333;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:0.45rem;transition:all 0.3s;}
-.streak-day.claimed{border-color:#f59e0b;background:#f59e0b22;color:#f59e0b;}
-.streak-day.today{border-color:#fbbf24;background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#000;box-shadow:0 0 12px #f59e0b;}
 
 /* ── BATTLE PASS ── */
 #bpass-bar{position:fixed;bottom:0;left:0;right:0;height:28px;background:rgba(0,0,0,0.85);border-top:1px solid #1a1a2a;z-index:40;display:flex;align-items:center;padding:0 10px;gap:8px;pointer-events:none;}
@@ -1941,7 +1936,6 @@ body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif;color:#ff
     <span class="fh-bonus"></span>
   </div>
   <div id="notifs"></div>
-  <div id="streak-banner"></div>
   <div id="bpass-bar">
     <div id="bpass-label">SEASON PASS</div>
     <div id="bpass-track"><div id="bpass-fill" style="width:0%"></div></div>
@@ -10895,20 +10889,6 @@ if(startHint) startHint.innerHTML += '<br>H · Base &nbsp;|&nbsp; 🏆 RANKS but
   </div>
 </div>
 
-<!-- ══ LOGIN STREAK MODAL ══ -->
-<div id="streak-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:250;align-items:center;justify-content:center;">
-  <div style="background:linear-gradient(135deg,#1a0a00,#2d1500);border:2px solid #f59e0b44;border-radius:16px;padding:28px;max-width:360px;width:90%;text-align:center;">
-    <div style="font-size:2rem;margin-bottom:4px;">🔥</div>
-    <div id="streak-modal-title" style="font-size:0.85rem;font-weight:900;letter-spacing:4px;color:#f59e0b;margin-bottom:4px;"></div>
-    <div id="streak-modal-sub" style="font-size:0.5rem;color:#888;letter-spacing:2px;margin-bottom:18px;"></div>
-    <div id="streak-days-row" style="display:flex;gap:8px;justify-content:center;margin-bottom:18px;"></div>
-    <div id="streak-reward-box" style="background:rgba(245,158,11,0.08);border:1px solid #f59e0b33;border-radius:10px;padding:12px;margin-bottom:16px;">
-      <div style="font-size:0.5rem;color:#888;margin-bottom:4px;">TODAY'S REWARD</div>
-      <div id="streak-reward-text" style="font-size:0.75rem;font-weight:900;color:#fbbf24;"></div>
-    </div>
-    <button onclick="claimStreakReward()" id="streak-claim-btn" style="width:100%;padding:12px;background:linear-gradient(90deg,#b45309,#f59e0b);border:none;color:#000;border-radius:8px;cursor:pointer;font-size:0.65rem;font-weight:900;letter-spacing:3px;">🔥 CLAIM REWARD</button>
-  </div>
-</div>
 
 <script>
 // ════════════════════════════════════════════════════════
@@ -11410,70 +11390,6 @@ window.gainTrainerXp = function(amount, reason){
   _origGainTrainerXp(amount, reason);
 };
 
-// ════════════════════════════════════════════════════════
-// 🔥 LOGIN STREAK
-// ════════════════════════════════════════════════════════
-const STREAK_REWARDS = [
-  { day:1, label:'+50 coins',     fn:()=>addCoins(50) },
-  { day:2, label:'+100 coins',    fn:()=>addCoins(100) },
-  { day:3, label:'+1 Potion ×3',  fn:()=>{ const inv=getItems(); inv.potion=(inv.potion||0)+3; saveItems(inv); } },
-  { day:4, label:'+200 coins',    fn:()=>addCoins(200) },
-  { day:5, label:'+1 Elixir',     fn:()=>{ const inv=getItems(); inv.elixir=(inv.elixir||0)+1; saveItems(inv); } },
-  { day:6, label:'+300 coins',    fn:()=>addCoins(300) },
-  { day:7, label:'🌟 500 coins + Rare Spawn!', fn:()=>{ addCoins(500); setTimeout(()=>shopBuyLucky&&(getCoins()>=0)&&spawnWildSuper(SUPER_DEFS.map((s,i)=>({i,r:s.rarity})).filter(x=>x.r>=4).sort(()=>Math.random()-0.5)[0]?.i||0, player?.position?.x||0, player?.position?.z||5), 2000); } },
-];
-
-function getStreakData(){
-  return JSON.parse(localStorage.getItem('sf_streak_v1')||'{"streak":0,"lastDate":"","claimed":false}');
-}
-function saveStreakData(d){ localStorage.setItem('sf_streak_v1', JSON.stringify(d)); }
-
-function checkLoginStreak(){
-  const today = new Date().toDateString();
-  const d = getStreakData();
-  const yesterday = new Date(Date.now()-86400000).toDateString();
-  if(d.lastDate === today) return; // already handled today
-  if(d.lastDate === yesterday){
-    d.streak = Math.min(d.streak + 1, 7);
-  } else if(d.lastDate !== today){
-    d.streak = 1; // reset or start
-  }
-  d.lastDate = today;
-  d.claimed = false;
-  saveStreakData(d);
-  showStreakModal(d);
-}
-
-function showStreakModal(d){
-  const modal = document.getElementById('streak-modal');
-  const streak = d.streak;
-  document.getElementById('streak-modal-title').textContent = `DAY ${streak} STREAK 🔥`;
-  document.getElementById('streak-modal-sub').textContent = streak >= 7 ? 'MAXIMUM STREAK — LEGENDARY REWARD!' : `COME BACK TOMORROW FOR DAY ${Math.min(streak+1,7)}`;
-  const idx = Math.min(streak,7)-1;
-  const reward = STREAK_REWARDS[idx];
-  document.getElementById('streak-reward-text').textContent = reward.label;
-  // Draw 7 day circles
-  const row = document.getElementById('streak-days-row');
-  row.innerHTML = STREAK_REWARDS.map((r,i)=>{
-    const dayNum = i+1;
-    const cls = dayNum < streak ? 'claimed' : dayNum === streak ? 'today' : '';
-    return `<div class="streak-day ${cls}"><div style="font-size:0.7rem;">${dayNum===7?'🌟':'🔥'}</div><div style="font-size:0.4rem;color:${cls==='today'?'#000':'#888'}">D${dayNum}</div></div>`;
-  }).join('');
-  modal.style.display = 'flex';
-}
-
-window.claimStreakReward = function(){
-  const d = getStreakData();
-  if(d.claimed){ notify('Already claimed today!','bad'); return; }
-  const idx = Math.min(d.streak,7)-1;
-  STREAK_REWARDS[idx].fn();
-  d.claimed = true;
-  saveStreakData(d);
-  document.getElementById('streak-modal').style.display = 'none';
-  notify(`🔥 Day ${d.streak} reward claimed!`,'good');
-  SFX.levelup();
-  progressQuest('login1', 1);
-};
 
 // ════════════════════════════════════════════════════════
 // 🎖️ SEASON BATTLE PASS
@@ -11693,8 +11609,6 @@ const _origWBFlashHit = window.flashHit;
 (function initNewSystems(){
   // Battle pass bar
   updateBPassBar();
-  // Login streak — check after a short delay so game has loaded
-  setTimeout(checkLoginStreak, 2500);
   // Quest: add login quest if not in QUEST_DEFS
   if(typeof QUEST_DEFS !== 'undefined'){
     if(!QUEST_DEFS.find(q=>q.id==='login1')){
