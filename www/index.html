@@ -5192,51 +5192,7 @@ function getArchetypeSVG(arch, color){
   const c = color||'#88aaff';
   const u = (Math.random()*1e6|0).toString(36);
 
-  /* Archetype armor detail overlays */
-  const overlays = {
-    'super-speedster':`
-      <path d="M38,56 L44,50 L56,50 L62,56 L56,62 L44,62 Z" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.55"/>
-      <circle cx="50" cy="56" r="2.5" fill="${c}" fill-opacity="0.7"/>
-      <line x1="16" y1="60" x2="6" y2="82" stroke="${c}" stroke-width="1.2" stroke-opacity="0.5"/>
-      <line x1="84" y1="60" x2="94" y2="82" stroke="${c}" stroke-width="1.2" stroke-opacity="0.5"/>
-      <line x1="28" y1="178" x2="40" y2="184" stroke="${c}" stroke-width="1.2" stroke-opacity="0.6"/>
-      <line x1="72" y1="178" x2="60" y2="184" stroke="${c}" stroke-width="1.2" stroke-opacity="0.6"/>`,
-    'super-juggernaut':`
-      <rect x="10" y="44" width="16" height="10" rx="2" fill="${c}" fill-opacity="0.28" stroke="${c}" stroke-width="0.7" stroke-opacity="0.7"/>
-      <rect x="74" y="44" width="16" height="10" rx="2" fill="${c}" fill-opacity="0.28" stroke="${c}" stroke-width="0.7" stroke-opacity="0.7"/>
-      <rect x="30" y="50" width="40" height="38" rx="2" fill="none" stroke="${c}" stroke-width="0.7" stroke-opacity="0.4"/>
-      <line x1="50" y1="50" x2="50" y2="88" stroke="${c}" stroke-width="0.6" stroke-opacity="0.4"/>
-      <rect x="32" y="88" width="36" height="14" rx="1" fill="${c}" fill-opacity="0.12" stroke="${c}" stroke-width="0.5" stroke-opacity="0.35"/>
-      <circle cx="34" cy="54" r="2" fill="${c}" fill-opacity="0.65"/>
-      <circle cx="66" cy="54" r="2" fill="${c}" fill-opacity="0.65"/>
-      <circle cx="34" cy="86" r="2" fill="${c}" fill-opacity="0.65"/>
-      <circle cx="66" cy="86" r="2" fill="${c}" fill-opacity="0.65"/>
-      <rect x="27" y="163" width="16" height="10" rx="2" fill="${c}" fill-opacity="0.35" stroke="${c}" stroke-width="0.7" stroke-opacity="0.6"/>
-      <rect x="57" y="163" width="16" height="10" rx="2" fill="${c}" fill-opacity="0.35" stroke="${c}" stroke-width="0.7" stroke-opacity="0.6"/>`,
-    'super-assassin':`
-      <path d="M34,42 Q50,49 66,42" fill="none" stroke="${c}" stroke-width="1.1" stroke-opacity="0.55"/>
-      <line x1="50" y1="42" x2="50" y2="104" stroke="${c}" stroke-width="0.7" stroke-opacity="0.5" stroke-dasharray="4,3"/>
-      <path d="M1,112 L0,136 L8,133 L8,112 Z" fill="${c}" fill-opacity="0.65" stroke="${c}" stroke-width="0.5"/>
-      <line x1="15" y1="46" x2="10" y2="55" stroke="${c}" stroke-width="1.6" stroke-opacity="0.8"/>
-      <line x1="85" y1="46" x2="90" y2="55" stroke="${c}" stroke-width="1.6" stroke-opacity="0.8"/>
-      <line x1="27" y1="130" x2="47" y2="126" stroke="${c}" stroke-width="0.8" stroke-opacity="0.45"/>
-      <line x1="27" y1="139" x2="47" y2="135" stroke="${c}" stroke-width="0.8" stroke-opacity="0.45"/>
-      <line x1="53" y1="126" x2="73" y2="130" stroke="${c}" stroke-width="0.8" stroke-opacity="0.45"/>
-      <line x1="53" y1="135" x2="73" y2="139" stroke="${c}" stroke-width="0.8" stroke-opacity="0.45"/>`,
-    'super-elemental':`
-      <ellipse cx="50" cy="104" rx="44" ry="86" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.18"/>
-      <circle cx="50" cy="66" r="20" fill="none" stroke="${c}" stroke-width="0.7" stroke-opacity="0.38"/>
-      <circle cx="50" cy="66" r="11" fill="none" stroke="${c}" stroke-width="0.5" stroke-opacity="0.45"/>
-      <line x1="50" y1="46" x2="50" y2="86" stroke="${c}" stroke-width="0.5" stroke-opacity="0.32"/>
-      <line x1="30" y1="66" x2="70" y2="66" stroke="${c}" stroke-width="0.5" stroke-opacity="0.32"/>
-      <path d="M2,120 Q-4,110 3,100 Q10,90 5,78" fill="none" stroke="${c}" stroke-width="1.2" stroke-opacity="0.6"/>
-      <path d="M98,120 Q104,110 97,100 Q90,90 95,78" fill="none" stroke="${c}" stroke-width="1.2" stroke-opacity="0.6"/>
-      <polygon points="50,22 57,33 43,33" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.65"/>`
-  };
-  const overlay = overlays[arch]||overlays['super-speedster'];
-
-  return `<svg viewBox="0 0 100 210" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%">
-<defs>
+  const defs = `<defs>
   <linearGradient id="fg${u}" x1="18%" y1="0%" x2="82%" y2="100%">
     <stop offset="0%" stop-color="${c}" stop-opacity="0.95"/>
     <stop offset="50%" stop-color="${c}" stop-opacity="0.72"/>
@@ -5251,103 +5207,262 @@ function getArchetypeSVG(arch, color){
     <stop offset="0%" stop-color="#000" stop-opacity="0.38"/>
     <stop offset="55%" stop-color="#000" stop-opacity="0"/>
   </linearGradient>
-</defs>
+  <radialGradient id="au${u}" cx="50%" cy="55%" r="48%">
+    <stop offset="0%" stop-color="${c}" stop-opacity="0.18"/>
+    <stop offset="100%" stop-color="${c}" stop-opacity="0"/>
+  </radialGradient>
+  <filter id="gw${u}" x="-25%" y="-25%" width="150%" height="150%">
+    <feGaussianBlur stdDeviation="2.5" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>`;
 
-<!-- ambient glow -->
-<ellipse cx="50" cy="112" rx="34" ry="78" fill="${c}" fill-opacity="0.07"/>
-
-<!-- ── HEAD — proper oval, wider at cheeks, jaw taper ── -->
-<path d="M50,5 C43,5 37,9 35,15 C33,21 34,28 37,32 C39,36 43,38 46,39 C47,40 48,40 50,40 C52,40 53,40 54,39 C57,38 61,36 63,32 C66,28 67,21 65,15 C63,9 57,5 50,5 Z" fill="url(#fg${u})"/>
-<path d="M50,5 C43,5 37,9 35,15 C33,21 34,28 37,32 C39,36 43,38 46,39 C47,40 48,40 50,40 C52,40 53,40 54,39 C57,38 61,36 63,32 C66,28 67,21 65,15 C63,9 57,5 50,5 Z" fill="url(#rl${u})"/>
-<path d="M50,5 C43,5 37,9 35,15 C33,21 34,28 37,32 C39,36 43,38 46,39 C47,40 48,40 50,40 C52,40 53,40 54,39 C57,38 61,36 63,32 C66,28 67,21 65,15 C63,9 57,5 50,5 Z" fill="url(#sh${u})"/>
-<!-- brow ridge -->
-<path d="M38,18 Q43,15 48,17" fill="none" stroke="#fff" stroke-width="0.9" stroke-opacity="0.3"/>
-<path d="M52,17 Q57,15 62,18" fill="none" stroke="#fff" stroke-width="0.9" stroke-opacity="0.3"/>
-<!-- mouth -->
-<path d="M44,30 Q50,33 56,30" fill="none" stroke="#fff" stroke-width="0.7" stroke-opacity="0.22"/>
-<!-- nose shadow -->
-<line x1="50" y1="22" x2="50" y2="28" stroke="#000" stroke-width="0.6" stroke-opacity="0.2"/>
-
-<!-- ── NECK — tapered, visible cords ── -->
+  const body = `
+<ellipse cx="50" cy="112" rx="34" ry="78" fill="url(#au${u})"/>
+<path d="M50,5 C43,5 37,9 35,15 C33,21 34,28 37,32 C39,36 43,38 46,39 C47,40 48,40 50,40 C52,40 53,40 54,39 C57,38 61,36 63,32 C66,28 67,21 65,15 C63,9 57,5 50,5 Z" fill="#1c0f30"/>
 <path d="M43,37 C42,40 42,43 43,46 L57,46 C58,43 58,40 57,37 Z" fill="url(#fg${u})"/>
 <line x1="46" y1="37" x2="46" y2="46" stroke="#000" stroke-width="0.5" stroke-opacity="0.18"/>
 <line x1="54" y1="37" x2="54" y2="46" stroke="#000" stroke-width="0.5" stroke-opacity="0.18"/>
-
-<!-- ── TORSO — broad shoulders → waist pinch → hip flare ── -->
-<path d="
-  M19,46 C14,48 11,53 11,59 C11,64 14,68 18,70
-  C17,78 17,86 18,93 C19,98 22,102 27,104
-  Q38,108 50,109 Q62,108 73,104
-  C78,102 81,98 82,93 C83,86 83,78 82,70
-  C86,68 89,64 89,59 C89,53 86,48 81,46
-  C74,43 63,41 50,41 C37,41 26,43 19,46 Z
-" fill="url(#fg${u})"/>
-<path d="
-  M19,46 C14,48 11,53 11,59 C11,64 14,68 18,70
-  C17,78 17,86 18,93 C19,98 22,102 27,104
-  Q38,108 50,109 Q62,108 73,104
-  C78,102 81,98 82,93 C83,86 83,78 82,70
-  C86,68 89,64 89,59 C89,53 86,48 81,46
-  C74,43 63,41 50,41 C37,41 26,43 19,46 Z
-" fill="url(#rl${u})"/>
-<path d="
-  M19,46 C14,48 11,53 11,59 C11,64 14,68 18,70
-  C17,78 17,86 18,93 C19,98 22,102 27,104
-  Q38,108 50,109 Q62,108 73,104
-  C78,102 81,98 82,93 C83,86 83,78 82,70
-  C86,68 89,64 89,59 C89,53 86,48 81,46
-  C74,43 63,41 50,41 C37,41 26,43 19,46 Z
-" fill="url(#sh${u})"/>
-<!-- pec line -->
+<path d="M19,46 C14,48 11,53 11,59 C11,64 14,68 18,70 C17,78 17,86 18,93 C19,98 22,102 27,104 Q38,108 50,109 Q62,108 73,104 C78,102 81,98 82,93 C83,86 83,78 82,70 C86,68 89,64 89,59 C89,53 86,48 81,46 C74,43 63,41 50,41 C37,41 26,43 19,46 Z" fill="url(#fg${u})"/>
+<path d="M19,46 C14,48 11,53 11,59 C11,64 14,68 18,70 C17,78 17,86 18,93 C19,98 22,102 27,104 Q38,108 50,109 Q62,108 73,104 C78,102 81,98 82,93 C83,86 83,78 82,70 C86,68 89,64 89,59 C89,53 86,48 81,46 C74,43 63,41 50,41 C37,41 26,43 19,46 Z" fill="url(#rl${u})"/>
+<path d="M19,46 C14,48 11,53 11,59 C11,64 14,68 18,70 C17,78 17,86 18,93 C19,98 22,102 27,104 Q38,108 50,109 Q62,108 73,104 C78,102 81,98 82,93 C83,86 83,78 82,70 C86,68 89,64 89,59 C89,53 86,48 81,46 C74,43 63,41 50,41 C37,41 26,43 19,46 Z" fill="url(#sh${u})"/>
 <path d="M30,60 Q50,66 70,60" fill="none" stroke="#fff" stroke-width="0.6" stroke-opacity="0.14"/>
-<!-- ab lines -->
 <line x1="50" y1="68" x2="50" y2="106" stroke="#000" stroke-width="0.5" stroke-opacity="0.22"/>
 <path d="M38,78 Q50,80 62,78" fill="none" stroke="#000" stroke-width="0.5" stroke-opacity="0.2"/>
 <path d="M37,90 Q50,92 63,90" fill="none" stroke="#000" stroke-width="0.5" stroke-opacity="0.2"/>
-
-<!-- ── LEFT UPPER ARM — bicep bulge ── -->
 <path d="M13,57 C8,59 5,65 4,73 C3,81 5,88 9,92 C12,95 16,95 19,93 C21,91 22,87 22,80 C22,72 21,65 18,60 Z" fill="url(#fg${u})"/>
-<!-- ── RIGHT UPPER ARM ── -->
 <path d="M87,57 C92,59 95,65 96,73 C97,81 95,88 91,92 C88,95 84,95 81,93 C79,91 78,87 78,80 C78,72 79,65 82,60 Z" fill="url(#fg${u})"/>
 <path d="M87,57 C92,59 95,65 96,73 C97,81 95,88 91,92 C88,95 84,95 81,93 C79,91 78,87 78,80 C78,72 79,65 82,60 Z" fill="url(#sh${u})"/>
-
-<!-- ── LEFT FOREARM — tapers to wrist ── -->
 <path d="M7,90 C5,95 4,104 5,112 C6,118 9,122 13,123 C17,124 20,121 21,116 C22,110 22,101 20,93 Z" fill="url(#fg${u})"/>
-<!-- ── RIGHT FOREARM ── -->
 <path d="M93,90 C95,95 96,104 95,112 C94,118 91,122 87,123 C83,124 80,121 79,116 C78,110 78,101 80,93 Z" fill="url(#fg${u})"/>
 <path d="M93,90 C95,95 96,104 95,112 C94,118 91,122 87,123 C83,124 80,121 79,116 C78,110 78,101 80,93 Z" fill="url(#sh${u})"/>
-
-<!-- ── HANDS — fist shape ── -->
 <path d="M5,121 C4,124 4,129 7,131 C10,133 14,133 17,131 C20,129 21,126 20,122 C19,119 16,117 13,117 C9,117 6,118 5,121 Z" fill="url(#fg${u})"/>
 <path d="M95,121 C96,124 96,129 93,131 C90,133 86,133 83,131 C80,129 79,126 80,122 C81,119 84,117 87,117 C91,117 94,118 95,121 Z" fill="url(#fg${u})"/>
 <path d="M95,121 C96,124 96,129 93,131 C90,133 86,133 83,131 C80,129 79,126 80,122 C81,119 84,117 87,117 C91,117 94,118 95,121 Z" fill="url(#sh${u})"/>
-
-<!-- ── PELVIS — hip shelf ── -->
 <path d="M25,107 Q50,114 75,107 L72,122 Q50,128 28,122 Z" fill="url(#fg${u})"/>
-
-<!-- ── LEFT THIGH — quad mass ── -->
 <path d="M28,120 C23,122 20,130 20,140 C20,150 22,158 27,163 C31,167 37,167 41,164 C45,161 47,154 47,144 C47,134 45,126 41,121 C38,118 32,118 28,120 Z" fill="url(#fg${u})"/>
-<!-- ── RIGHT THIGH ── -->
 <path d="M72,120 C77,122 80,130 80,140 C80,150 78,158 73,163 C69,167 63,167 59,164 C55,161 53,154 53,144 C53,134 55,126 59,121 C62,118 68,118 72,120 Z" fill="url(#fg${u})"/>
 <path d="M72,120 C77,122 80,130 80,140 C80,150 78,158 73,163 C69,167 63,167 59,164 C55,161 53,154 53,144 C53,134 55,126 59,121 C62,118 68,118 72,120 Z" fill="url(#sh${u})"/>
-
-<!-- ── KNEES — kneecap oval ── -->
 <path d="M21,160 C20,164 21,170 24,173 C28,176 35,176 39,173 C43,170 44,164 43,160 C40,163 36,165 33,165 C30,165 23,163 21,160 Z" fill="url(#fg${u})"/>
 <path d="M79,160 C80,164 79,170 76,173 C72,176 65,176 61,173 C57,170 56,164 57,160 C60,163 64,165 67,165 C70,165 77,163 79,160 Z" fill="url(#fg${u})"/>
-
-<!-- ── LEFT SHIN — calf swell then taper ── -->
 <path d="M21,170 C20,176 20,184 22,191 C24,196 27,199 32,200 C36,201 40,199 42,195 C44,191 44,184 43,176 C41,170 38,166 34,165 C30,165 22,167 21,170 Z" fill="url(#fg${u})"/>
-<!-- ── RIGHT SHIN ── -->
 <path d="M79,170 C80,176 80,184 78,191 C76,196 73,199 68,200 C64,201 60,199 58,195 C56,191 56,184 57,176 C59,170 62,166 66,165 C70,165 78,167 79,170 Z" fill="url(#fg${u})"/>
 <path d="M79,170 C80,176 80,184 78,191 C76,196 73,199 68,200 C64,201 60,199 58,195 C56,191 56,184 57,176 C59,170 62,166 66,165 C70,165 78,167 79,170 Z" fill="url(#sh${u})"/>
-
-<!-- ── FEET — shoe profile ── -->
 <path d="M20,197 C18,199 17,202 18,205 C19,207 22,208 28,209 C35,210 42,209 46,207 C49,205 49,202 46,199 C44,197 41,196 37,196 Z" fill="url(#fg${u})"/>
 <path d="M80,197 C82,199 83,202 82,205 C81,207 78,208 72,209 C65,210 58,209 54,207 C51,205 51,202 54,199 C56,197 59,196 63,196 Z" fill="url(#fg${u})"/>
-<path d="M80,197 C82,199 83,202 82,205 C81,207 78,208 72,209 C65,210 58,209 54,207 C51,205 51,202 54,199 C56,197 59,196 63,196 Z" fill="url(#sh${u})"/>
+<path d="M80,197 C82,199 83,202 82,205 C81,207 78,208 72,209 C65,210 58,209 54,207 C51,205 51,202 54,199 C56,197 59,196 63,196 Z" fill="url(#sh${u})"/>`;
 
-<!-- ── ARCHETYPE OVERLAY ── -->
-${overlay}
+  /* ── SPEEDSTER: spiky hair, goggle visor, lightning bolt, electric sparks ── */
+  if(arch === 'super-speedster'){
+    return `<svg viewBox="0 0 100 210" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%">
+${defs}
+${body}
+<!-- Spiky hair swept back -->
+<path d="M34,14 L30,3 L38,11 L39,1 L45,10 L47,1 L50,9 L53,1 L55,10 L61,1 L63,11 L70,3 L66,14 L62,17 L50,19 L38,17 Z" fill="${c}"/>
+<path d="M35,14 L50,8 L65,14 L62,18 L50,21 L38,18 Z" fill="${c}" fill-opacity="0.55"/>
+<!-- Orange goggle visor -->
+<rect x="33" y="16" width="34" height="11" rx="5.5" fill="#cc6600"/>
+<rect x="34.5" y="17" width="14" height="9" rx="4.5" fill="#ff9922" fill-opacity="0.75"/>
+<rect x="51.5" y="17" width="14" height="9" rx="4.5" fill="#ff9922" fill-opacity="0.75"/>
+<path d="M35.5,18 L44.5,18 L44.5,21 L35.5,21 Z" fill="#fff" fill-opacity="0.38"/>
+<line x1="33" y1="21.5" x2="28" y2="21.5" stroke="#cc6600" stroke-width="2.2"/>
+<line x1="67" y1="21.5" x2="72" y2="21.5" stroke="#cc6600" stroke-width="2.2"/>
+<!-- Determined mouth -->
+<path d="M44,32 Q50,35.5 56,32" fill="none" stroke="#aaa" stroke-width="0.9" stroke-opacity="0.65"/>
+<!-- Lightning bolt chest emblem -->
+<polygon points="53,57 46,73 52,73 46,91 58,73 52,73 58,57" fill="${c}" fill-opacity="0.9" filter="url(#gw${u})"/>
+<!-- Circuit arm lines -->
+<polyline points="18,70 6,74 6,81 18,81" fill="none" stroke="${c}" stroke-width="0.9" stroke-opacity="0.5"/>
+<polyline points="82,70 94,74 94,81 82,81" fill="none" stroke="${c}" stroke-width="0.9" stroke-opacity="0.5"/>
+<!-- Waist trim -->
+<line x1="30" y1="105" x2="70" y2="105" stroke="${c}" stroke-width="0.7" stroke-opacity="0.4"/>
+<!-- Slim knee pads -->
+<rect x="21" y="161" width="19" height="9" rx="3.5" fill="${c}" fill-opacity="0.32" stroke="${c}" stroke-width="0.7"/>
+<rect x="60" y="161" width="19" height="9" rx="3.5" fill="${c}" fill-opacity="0.32" stroke="${c}" stroke-width="0.7"/>
+<!-- Speed lines -->
+<line x1="0" y1="72" x2="17" y2="68" stroke="${c}" stroke-width="0.9" stroke-opacity="0.38"/>
+<line x1="0" y1="84" x2="13" y2="82" stroke="${c}" stroke-width="0.8" stroke-opacity="0.3"/>
+<line x1="0" y1="96" x2="15" y2="95" stroke="${c}" stroke-width="0.8" stroke-opacity="0.28"/>
+<!-- Electric spark zigzags -->
+<g filter="url(#gw${u})" stroke="${c}" stroke-width="1.6" fill="none" stroke-opacity="0.88">
+  <polyline points="1,43 7,54 1,60 7,71"/>
+  <polyline points="98,97 93,107 99,113"/>
+  <polyline points="1,142 7,152 1,158"/>
+</g>
+<!-- Animated spark orbs -->
+<circle cx="5" cy="57" r="3" fill="${c}"><animate attributeName="r" values="3;5;3" dur="0.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.15;1" dur="0.5s" repeatCount="indefinite"/></circle>
+<circle cx="96" cy="104" r="2.5" fill="${c}"><animate attributeName="r" values="2.5;4.5;2.5" dur="0.7s" begin="0.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.9;0.1;0.9" dur="0.7s" begin="0.2s" repeatCount="indefinite"/></circle>
+<circle cx="4" cy="149" r="2" fill="${c}"><animate attributeName="opacity" values="1;0;1" dur="0.6s" begin="0.35s" repeatCount="indefinite"/></circle>
+</svg>`;
+  }
+
+  /* ── JUGGERNAUT: battle headband, fierce eyes, shoulder armor, flames ── */
+  if(arch === 'super-juggernaut'){
+    return `<svg viewBox="0 0 100 210" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%">
+${defs}
+${body}
+<!-- Short spiky battle hair -->
+<path d="M35,10 L32,2 L40,8 L44,2 L48,8 L52,2 L56,8 L60,2 L65,10 L68,5 L66,14 L50,17 L34,14 Z" fill="${c}" fill-opacity="0.8"/>
+<!-- Battle headband -->
+<rect x="33" y="11" width="34" height="6" rx="3" fill="${c}" fill-opacity="0.55" stroke="${c}" stroke-width="0.6"/>
+<line x1="33" y1="14" x2="28" y2="18" stroke="${c}" stroke-width="1.6" stroke-opacity="0.65"/>
+<line x1="67" y1="14" x2="72" y2="18" stroke="${c}" stroke-width="1.6" stroke-opacity="0.65"/>
+<!-- Anime eyes — fierce, heavy brows -->
+<path d="M35,18 L46,18" fill="none" stroke="${c}" stroke-width="1.8" stroke-linecap="round"/>
+<ellipse cx="41" cy="22" rx="4.5" ry="4" fill="white"/>
+<ellipse cx="41" cy="22" rx="3.5" ry="3.2" fill="${c}"/>
+<ellipse cx="41" cy="22.5" rx="2" ry="2.5" fill="#111"/>
+<ellipse cx="39.8" cy="21" rx="0.9" ry="1" fill="white"/>
+<path d="M54,18 L65,18" fill="none" stroke="${c}" stroke-width="1.8" stroke-linecap="round"/>
+<ellipse cx="59" cy="22" rx="4.5" ry="4" fill="white"/>
+<ellipse cx="59" cy="22" rx="3.5" ry="3.2" fill="${c}"/>
+<ellipse cx="59" cy="22.5" rx="2" ry="2.5" fill="#111"/>
+<ellipse cx="57.8" cy="21" rx="0.9" ry="1" fill="white"/>
+<!-- Nose + set jaw -->
+<line x1="50" y1="24" x2="50" y2="29" stroke="#000" stroke-width="0.7" stroke-opacity="0.3"/>
+<path d="M44,32 L56,32" fill="none" stroke="#aaa" stroke-width="1.2" stroke-opacity="0.6" stroke-linecap="round"/>
+<!-- Wide shoulder armor plates -->
+<rect x="7" y="44" width="20" height="13" rx="2.5" fill="${c}" fill-opacity="0.3" stroke="${c}" stroke-width="0.9"/>
+<rect x="73" y="44" width="20" height="13" rx="2.5" fill="${c}" fill-opacity="0.3" stroke="${c}" stroke-width="0.9"/>
+<circle cx="13" cy="50.5" r="2.5" fill="${c}" fill-opacity="0.7"/>
+<circle cx="87" cy="50.5" r="2.5" fill="${c}" fill-opacity="0.7"/>
+<!-- Chest armor box with center divide -->
+<rect x="27" y="50" width="46" height="44" rx="2.5" fill="none" stroke="${c}" stroke-width="0.9" stroke-opacity="0.5"/>
+<line x1="50" y1="50" x2="50" y2="94" stroke="${c}" stroke-width="0.7" stroke-opacity="0.38"/>
+<line x1="27" y1="72" x2="73" y2="72" stroke="${c}" stroke-width="0.6" stroke-opacity="0.32"/>
+<!-- Corner rivets -->
+<circle cx="30" cy="53" r="1.8" fill="${c}" fill-opacity="0.72"/>
+<circle cx="70" cy="53" r="1.8" fill="${c}" fill-opacity="0.72"/>
+<circle cx="30" cy="91" r="1.8" fill="${c}" fill-opacity="0.72"/>
+<circle cx="70" cy="91" r="1.8" fill="${c}" fill-opacity="0.72"/>
+<!-- Belt + buckle -->
+<rect x="27" y="104" width="46" height="10" rx="2" fill="${c}" fill-opacity="0.28" stroke="${c}" stroke-width="0.8"/>
+<rect x="46" y="105.5" width="8" height="7" rx="1.5" fill="${c}" fill-opacity="0.6"/>
+<!-- Heavy forearm guards -->
+<rect x="1" y="91" width="21" height="28" rx="4" fill="${c}" fill-opacity="0.2" stroke="${c}" stroke-width="0.7" stroke-opacity="0.55"/>
+<rect x="78" y="91" width="21" height="28" rx="4" fill="${c}" fill-opacity="0.2" stroke="${c}" stroke-width="0.7" stroke-opacity="0.55"/>
+<!-- Heavy knee armor -->
+<rect x="18" y="157" width="24" height="15" rx="3" fill="${c}" fill-opacity="0.38" stroke="${c}" stroke-width="0.9"/>
+<rect x="58" y="157" width="24" height="15" rx="3" fill="${c}" fill-opacity="0.38" stroke="${c}" stroke-width="0.9"/>
+<line x1="18" y1="164.5" x2="42" y2="164.5" stroke="${c}" stroke-width="0.6" stroke-opacity="0.45"/>
+<line x1="58" y1="164.5" x2="82" y2="164.5" stroke="${c}" stroke-width="0.6" stroke-opacity="0.45"/>
+<!-- Ground cracks -->
+<g stroke="${c}" stroke-width="0.8" stroke-opacity="0.38" fill="none">
+  <line x1="20" y1="207" x2="7" y2="210"/><line x1="24" y1="208" x2="15" y2="212"/>
+  <line x1="80" y1="207" x2="93" y2="210"/><line x1="76" y1="208" x2="85" y2="212"/>
+</g>
+<!-- Animated flame bursts on fists -->
+<g filter="url(#gw${u})">
+  <ellipse cx="11" cy="128" rx="7" ry="5" fill="${c}" fill-opacity="0.72"><animate attributeName="ry" values="5;10;5" dur="0.6s" repeatCount="indefinite"/><animate attributeName="fill-opacity" values="0.72;0.35;0.72" dur="0.6s" repeatCount="indefinite"/></ellipse>
+  <ellipse cx="11" cy="120" rx="4" ry="6" fill="${c}" fill-opacity="0.55"><animate attributeName="ry" values="6;12;6" dur="0.7s" begin="0.1s" repeatCount="indefinite"/><animate attributeName="fill-opacity" values="0.55;0.18;0.55" dur="0.7s" begin="0.1s" repeatCount="indefinite"/></ellipse>
+  <ellipse cx="9" cy="113" rx="2.5" ry="4" fill="${c}" fill-opacity="0.4"><animate attributeName="ry" values="4;9;4" dur="0.5s" begin="0.22s" repeatCount="indefinite"/><animate attributeName="fill-opacity" values="0.4;0.08;0.4" dur="0.5s" begin="0.22s" repeatCount="indefinite"/></ellipse>
+  <ellipse cx="89" cy="128" rx="7" ry="5" fill="${c}" fill-opacity="0.72"><animate attributeName="ry" values="5;10;5" dur="0.65s" begin="0.15s" repeatCount="indefinite"/><animate attributeName="fill-opacity" values="0.72;0.35;0.72" dur="0.65s" begin="0.15s" repeatCount="indefinite"/></ellipse>
+  <ellipse cx="89" cy="120" rx="4" ry="6" fill="${c}" fill-opacity="0.55"><animate attributeName="ry" values="6;12;6" dur="0.75s" begin="0.05s" repeatCount="indefinite"/><animate attributeName="fill-opacity" values="0.55;0.18;0.55" dur="0.75s" begin="0.05s" repeatCount="indefinite"/></ellipse>
+  <ellipse cx="91" cy="113" rx="2.5" ry="4" fill="${c}" fill-opacity="0.4"><animate attributeName="ry" values="4;9;4" dur="0.55s" begin="0.32s" repeatCount="indefinite"/><animate attributeName="fill-opacity" values="0.4;0.08;0.4" dur="0.55s" begin="0.32s" repeatCount="indefinite"/></ellipse>
+</g>
+</svg>`;
+  }
+
+  /* ── ASSASSIN: hood + glowing eyes, dark cloak sides, blade, shadow wisps ── */
+  if(arch === 'super-assassin'){
+    return `<svg viewBox="0 0 100 210" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%">
+${defs}
+${body}
+<!-- Hood fabric over head -->
+<path d="M50,1 C36,1 27,8 26,17 C25,25 27,34 32,38 C27,41 24,46 24,50 C33,46 38,44 50,44 C62,44 67,46 76,50 C76,46 73,41 68,38 C73,34 75,25 74,17 C73,8 64,1 50,1 Z" fill="#150025" stroke="${c}" stroke-width="0.5" stroke-opacity="0.45"/>
+<path d="M34,13 C33,20 34,28 37,33 C40,37 45,39 50,39 C55,39 60,37 63,33 C66,28 67,20 66,13 C62,9 56,7 50,7 C44,7 38,9 34,13 Z" fill="#0a0015" fill-opacity="0.85"/>
+<!-- Glowing eyes under hood -->
+<ellipse cx="41" cy="22" rx="5.5" ry="4" fill="${c}" fill-opacity="0.28" filter="url(#gw${u})"/>
+<ellipse cx="41" cy="22" rx="4.5" ry="3.2" fill="${c}" fill-opacity="0.9" filter="url(#gw${u})"/>
+<ellipse cx="41" cy="22" rx="2.5" ry="1.8" fill="white" fill-opacity="0.85"/>
+<ellipse cx="59" cy="22" rx="5.5" ry="4" fill="${c}" fill-opacity="0.28" filter="url(#gw${u})"/>
+<ellipse cx="59" cy="22" rx="4.5" ry="3.2" fill="${c}" fill-opacity="0.9" filter="url(#gw${u})"/>
+<ellipse cx="59" cy="22" rx="2.5" ry="1.8" fill="white" fill-opacity="0.85"/>
+<!-- Eye glow pulse -->
+<ellipse cx="41" cy="22" rx="6" ry="5" fill="${c}" fill-opacity="0.15"><animate attributeName="fill-opacity" values="0.15;0.45;0.15" dur="1.4s" repeatCount="indefinite"/></ellipse>
+<ellipse cx="59" cy="22" rx="6" ry="5" fill="${c}" fill-opacity="0.15"><animate attributeName="fill-opacity" values="0.15;0.45;0.15" dur="1.4s" begin="0.5s" repeatCount="indefinite"/></ellipse>
+<!-- Hood front fold -->
+<path d="M26,22 C24,29 25,37 28,42 C34,39 39,37 50,37 C61,37 66,39 72,42 C75,37 76,29 74,22 C65,18 56,17 50,17 C44,17 35,18 26,22 Z" fill="${c}" fill-opacity="0.1" stroke="${c}" stroke-width="0.45" stroke-opacity="0.3"/>
+<!-- Dark cloak sides -->
+<path d="M12,50 C5,63 2,82 4,102 C5,115 9,122 15,128 C16,115 18,104 19,93 C14,87 11,79 11,68 Z" fill="#0a0015" fill-opacity="0.88"/>
+<path d="M88,50 C95,63 98,82 96,102 C95,115 91,122 85,128 C84,115 82,104 81,93 C86,87 89,79 89,68 Z" fill="#0a0015" fill-opacity="0.88"/>
+<path d="M12,50 C5,63 2,82 4,102 C5,115 9,122 15,128" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.45"/>
+<path d="M88,50 C95,63 98,82 96,102 C95,115 91,122 85,128" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.45"/>
+<!-- Diagonal chest sash -->
+<path d="M27,50 L69,102" fill="none" stroke="${c}" stroke-width="1.4" stroke-opacity="0.45"/>
+<!-- Dagger sheath -->
+<rect x="45" y="68" width="7" height="24" rx="2" fill="${c}" fill-opacity="0.38" stroke="${c}" stroke-width="0.5" transform="rotate(-10 49 80)"/>
+<!-- BLADE extended from left hand -->
+<rect x="0" y="105" width="4.5" height="28" rx="2.2" fill="${c}" fill-opacity="0.92"/>
+<polygon points="2.25,105 -1,87 5.5,87" fill="${c}" fill-opacity="0.88"/>
+<line x1="2.25" y1="105" x2="2.25" y2="89" stroke="white" stroke-width="0.8" stroke-opacity="0.5"/>
+<!-- Belt + pouches -->
+<rect x="28" y="104" width="44" height="9" rx="2" fill="${c}" fill-opacity="0.22" stroke="${c}" stroke-width="0.7"/>
+<rect x="44.5" y="105.5" width="11" height="6" rx="1.5" fill="${c}" fill-opacity="0.48"/>
+<!-- Ninja leg wraps -->
+<line x1="20" y1="140" x2="47" y2="140" stroke="${c}" stroke-width="0.7" stroke-opacity="0.38" stroke-dasharray="3,3"/>
+<line x1="53" y1="140" x2="80" y2="140" stroke="${c}" stroke-width="0.7" stroke-opacity="0.38" stroke-dasharray="3,3"/>
+<line x1="21" y1="155" x2="47" y2="155" stroke="${c}" stroke-width="0.65" stroke-opacity="0.32" stroke-dasharray="3,3"/>
+<line x1="53" y1="155" x2="79" y2="155" stroke="${c}" stroke-width="0.65" stroke-opacity="0.32" stroke-dasharray="3,3"/>
+<!-- Shadow pool at feet -->
+<ellipse cx="33" cy="205" rx="12" ry="3.5" fill="${c}" fill-opacity="0.45" filter="url(#gw${u})"><animate attributeName="rx" values="12;18;12" dur="1.3s" repeatCount="indefinite"/><animate attributeName="fill-opacity" values="0.45;0.18;0.45" dur="1.3s" repeatCount="indefinite"/></ellipse>
+<ellipse cx="67" cy="205" rx="12" ry="3.5" fill="${c}" fill-opacity="0.45" filter="url(#gw${u})"><animate attributeName="rx" values="12;18;12" dur="1.1s" begin="0.3s" repeatCount="indefinite"/><animate attributeName="fill-opacity" values="0.45;0.18;0.45" dur="1.1s" begin="0.3s" repeatCount="indefinite"/></ellipse>
+<!-- Rising shadow wisps -->
+<ellipse cx="15" cy="172" rx="3" ry="7" fill="${c}" fill-opacity="0.32"><animate attributeName="cy" values="172;150;172" dur="1.6s" repeatCount="indefinite"/><animate attributeName="fill-opacity" values="0.32;0;0.32" dur="1.6s" repeatCount="indefinite"/></ellipse>
+<ellipse cx="85" cy="168" rx="2.5" ry="6" fill="${c}" fill-opacity="0.28"><animate attributeName="cy" values="168;146;168" dur="1.35s" begin="0.4s" repeatCount="indefinite"/><animate attributeName="fill-opacity" values="0.28;0;0.28" dur="1.35s" begin="0.4s" repeatCount="indefinite"/></ellipse>
+<ellipse cx="50" cy="178" rx="2" ry="5" fill="${c}" fill-opacity="0.22"><animate attributeName="cy" values="178;156;178" dur="1.9s" begin="0.8s" repeatCount="indefinite"/><animate attributeName="fill-opacity" values="0.22;0;0.22" dur="1.9s" begin="0.8s" repeatCount="indefinite"/></ellipse>
+</svg>`;
+  }
+
+  /* ── ELEMENTAL (default): flowing hair, glowing eyes, rune, orbiting energy ── */
+  return `<svg viewBox="0 0 100 210" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%">
+${defs}
+${body}
+<!-- Long flowing hair left -->
+<path d="M35,8 C28,14 26,23 27,32 C28,38 31,42 35,44 L35,12 Z" fill="${c}" fill-opacity="0.65"/>
+<!-- Long flowing hair right -->
+<path d="M65,8 C72,14 74,23 73,32 C72,38 69,42 65,44 L65,12 Z" fill="${c}" fill-opacity="0.65"/>
+<!-- Hair crown -->
+<path d="M50,2 C40,2 33,7 31,14 C29,21 31,30 35,35 L35,10 C38,7 44,5 50,5 C56,5 62,7 65,10 L65,35 C69,30 71,21 69,14 C67,7 60,2 50,2 Z" fill="${c}" fill-opacity="0.6"/>
+<!-- Hair spikes top -->
+<polyline points="41,3 38,0 40,5" fill="none" stroke="${c}" stroke-width="1.3" stroke-opacity="0.7" stroke-linecap="round"/>
+<polyline points="50,2 50,-1 52,3" fill="none" stroke="${c}" stroke-width="1.3" stroke-opacity="0.7" stroke-linecap="round"/>
+<polyline points="59,3 62,0 60,5" fill="none" stroke="${c}" stroke-width="1.3" stroke-opacity="0.7" stroke-linecap="round"/>
+<!-- Anime eyes — glowing -->
+<ellipse cx="41" cy="20" rx="5.5" ry="5.5" fill="${c}" fill-opacity="0.22"/>
+<ellipse cx="41" cy="20" rx="5" ry="5" fill="white"/>
+<ellipse cx="41" cy="20" rx="4" ry="4.5" fill="${c}"/>
+<ellipse cx="41" cy="20" rx="2.5" ry="3" fill="#111"/>
+<ellipse cx="39.5" cy="18.5" rx="1.2" ry="1.2" fill="white"/>
+<path d="M36,13 Q41,11 46,13" fill="none" stroke="${c}" stroke-width="1.3" stroke-linecap="round"/>
+<ellipse cx="41" cy="20" rx="6" ry="6" fill="${c}" fill-opacity="0.12"><animate attributeName="fill-opacity" values="0.12;0.38;0.12" dur="1.2s" repeatCount="indefinite"/></ellipse>
+<ellipse cx="59" cy="20" rx="5.5" ry="5.5" fill="${c}" fill-opacity="0.22"/>
+<ellipse cx="59" cy="20" rx="5" ry="5" fill="white"/>
+<ellipse cx="59" cy="20" rx="4" ry="4.5" fill="${c}"/>
+<ellipse cx="59" cy="20" rx="2.5" ry="3" fill="#111"/>
+<ellipse cx="57.5" cy="18.5" rx="1.2" ry="1.2" fill="white"/>
+<path d="M54,13 Q59,11 64,13" fill="none" stroke="${c}" stroke-width="1.3" stroke-linecap="round"/>
+<ellipse cx="59" cy="20" rx="6" ry="6" fill="${c}" fill-opacity="0.12"><animate attributeName="fill-opacity" values="0.12;0.38;0.12" dur="1.2s" begin="0.4s" repeatCount="indefinite"/></ellipse>
+<!-- Nose + serene mouth -->
+<line x1="50" y1="22" x2="50" y2="27" stroke="#000" stroke-width="0.6" stroke-opacity="0.25"/>
+<path d="M45,31 Q50,34.5 55,31" fill="none" stroke="#fff" stroke-width="0.8" stroke-opacity="0.5"/>
+<!-- Elemental rune circle on chest -->
+<circle cx="50" cy="72" r="13" fill="none" stroke="${c}" stroke-width="0.8" stroke-opacity="0.48"/>
+<circle cx="50" cy="72" r="8" fill="none" stroke="${c}" stroke-width="0.65" stroke-opacity="0.58"/>
+<line x1="50" y1="59" x2="50" y2="85" stroke="${c}" stroke-width="0.6" stroke-opacity="0.45"/>
+<line x1="37" y1="72" x2="63" y2="72" stroke="${c}" stroke-width="0.6" stroke-opacity="0.45"/>
+<path d="M41,62 L59,82 M59,62 L41,82" stroke="${c}" stroke-width="0.5" stroke-opacity="0.3"/>
+<!-- Energy orbs in hands -->
+<circle cx="11" cy="126" r="9" fill="${c}" fill-opacity="0.12"><animate attributeName="r" values="9;14;9" dur="1s" repeatCount="indefinite"/><animate attributeName="fill-opacity" values="0.12;0.28;0.12" dur="1s" repeatCount="indefinite"/></circle>
+<circle cx="11" cy="126" r="6" fill="${c}" fill-opacity="0.55" filter="url(#gw${u})"><animate attributeName="r" values="6;9;6" dur="1s" repeatCount="indefinite"/></circle>
+<circle cx="89" cy="126" r="9" fill="${c}" fill-opacity="0.12"><animate attributeName="r" values="9;14;9" dur="1.1s" begin="0.3s" repeatCount="indefinite"/><animate attributeName="fill-opacity" values="0.12;0.28;0.12" dur="1.1s" begin="0.3s" repeatCount="indefinite"/></circle>
+<circle cx="89" cy="126" r="6" fill="${c}" fill-opacity="0.55" filter="url(#gw${u})"><animate attributeName="r" values="6;9;6" dur="1.1s" begin="0.3s" repeatCount="indefinite"/></circle>
+<!-- Orbiting energy particles around rune -->
+<g><animateTransform attributeName="transform" type="rotate" from="0 50 72" to="360 50 72" dur="2.4s" repeatCount="indefinite"/><circle cx="63" cy="72" r="3" fill="${c}" fill-opacity="0.85" filter="url(#gw${u})"/></g>
+<g><animateTransform attributeName="transform" type="rotate" from="180 50 72" to="540 50 72" dur="2.4s" repeatCount="indefinite"/><circle cx="63" cy="72" r="2.5" fill="${c}" fill-opacity="0.7" filter="url(#gw${u})"/></g>
+<g><animateTransform attributeName="transform" type="rotate" from="0 50 72" to="-360 50 72" dur="3.6s" repeatCount="indefinite"/><circle cx="71" cy="72" r="2" fill="${c}" fill-opacity="0.6" filter="url(#gw${u})"/></g>
+<!-- Full body aura pulse -->
+<ellipse cx="50" cy="112" rx="44" ry="92" fill="${c}" fill-opacity="0.03"><animate attributeName="fill-opacity" values="0.03;0.09;0.03" dur="1.8s" repeatCount="indefinite"/></ellipse>
 </svg>`;
 }
 
