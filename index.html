@@ -3751,7 +3751,7 @@ function makeRemotePlayer(name){
 
 // ── Player state ──────────────────────────────────────────────────────────────
 let myId=null, myName='Trainer', ws=null;
-let myFaction = localStorage.getItem('sf_faction') || null;
+var myFaction = localStorage.getItem('sf_faction') || null;
 let team = []; // populated by loadGame() below
 let gameMode = 'catch'; // may be overwritten by loadGame()
 
@@ -4092,6 +4092,7 @@ function launchGame(){
   buildTeamBar();
   updateTrainerHud();
   updateFactionHud();
+  initFactionVaultHooks();
   setTimeout(initVaultHunt, 3000);
   // Dev mode — localhost (your Mac) only. Cloudflare tunnel users are blocked.
   const isLocalMac = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
@@ -10644,73 +10645,86 @@ window.openFaction = function(){
   document.body.insertAdjacentHTML('beforeend', html);
 };
 
-// Hook: claim territory on every battle win
-const _origEndBattle2 = window.endBattle;
-window.endBattle = function(msg){
-  _origEndBattle2(msg);
-  if(msg.winner === myId && myFaction) claimZoneControl(myFaction, 10);
-};
-const _origEndWildBattle2 = window.endWildBattle;
-window.endWildBattle = function(result){
-  _origEndWildBattle2(result);
-  if(result === 'win' && myFaction) claimZoneControl(myFaction, 6);
-};
+// All hooks installed at game launch (not at script-parse time)
+function initFactionVaultHooks(){
+  // Hook: claim territory on every battle win
+  const _origEB = window.endBattle;
+  window.endBattle = function(msg){
+    _origEB(msg);
+    if(msg.winner === myId && myFaction) claimZoneControl(myFaction, 10);
+  };
+  const _origEWB = window.endWildBattle;
+  window.endWildBattle = function(result){
+    _origEWB(result);
+    if(result === 'win' && myFaction) claimZoneControl(myFaction, 6);
+  };
 
-// Simulate rival faction activity every few minutes
-setInterval(()=>{
-  if(!myFaction) return;
-  const rivals = Object.keys(FACTIONS).filter(f=>f!==myFaction);
-  const f = rivals[Math.floor(Math.random()*rivals.length)];
-  const z = WAR_ZONES[Math.floor(Math.random()*WAR_ZONES.length)];
-  const ctrl = getFactionControl();
-  Object.keys(ctrl[z.id]).forEach(k=>{ if(k===f) ctrl[z.id][k]=Math.min(100,ctrl[z.id][k]+3); else ctrl[z.id][k]=Math.max(0,ctrl[z.id][k]-1); });
-  saveFactionControl(ctrl);
-}, 90000);
+  // Apply faction stat bonus in combat
+  const _origPWBM = window.processWildBattleMove;
+  window.processWildBattleMove = function(moveIdx, isUltra){
+    const bonus = getFactionBonus();
+    if(bonus && myBattleSuper && !myBattleSuper._factionBoosted){
+      myBattleSuper._factionBoosted = true;
+      if(bonus.stat==='speed')   myBattleSuper.speed   = Math.round((myBattleSuper.speed||50)*1.2);
+      if(bonus.stat==='defense') myBattleSuper.defense = Math.round((myBattleSuper.defense||50)*1.2);
+      if(bonus.stat==='attack')  myBattleSuper.attack  = Math.round((myBattleSuper.attack||50)*1.2);
+      if(bonus.stat==='hp')      myBattleSuper.hp      = Math.min(myBattleSuper.maxHp, myBattleSuper.hp + Math.round(myBattleSuper.maxHp*0.2));
+    }
+    _origPWBM(moveIdx, isUltra);
+  };
 
-// Draw territory on minimap
-const _origDrawMinimap = drawMinimap;
-window.drawMinimap = function(){
-  _origDrawMinimap();
-  if(!myFaction) return;
-  const ctrl = getFactionControl();
-  const scale = 130/120;
-  WAR_ZONES.forEach(zone=>{
-    const owner = getZoneOwner(zone.id);
-    const f = FACTIONS[owner];
-    const mx = 65 + (zone.x - (player?.position?.x||0)) * scale;
-    const my = 65 + (zone.z - (player?.position?.z||0)) * scale;
-    if(mx<0||mx>130||my<0||my>130) return;
-    const rad = zone.r * scale;
-    mmCtx.beginPath();
-    mmCtx.arc(mx, my, rad, 0, Math.PI*2);
-    mmCtx.fillStyle = f.color + '22';
-    mmCtx.fill();
-    mmCtx.strokeStyle = f.color + '66';
-    mmCtx.lineWidth = 1;
-    mmCtx.stroke();
-    mmCtx.font = '8px sans-serif';
-    mmCtx.fillStyle = f.color + 'cc';
-    mmCtx.textAlign = 'center';
-    mmCtx.fillText(f.icon, mx, my+3);
-  });
-};
+  // Draw territory + vault blip on minimap
+  const _origDM = window.drawMinimap || drawMinimap;
+  window.drawMinimap = function(){
+    _origDM();
+    // Faction zone overlay
+    if(myFaction){
+      const scale = 130/120;
+      WAR_ZONES.forEach(zone=>{
+        const owner = getZoneOwner(zone.id);
+        const f = FACTIONS[owner];
+        const mx = 65 + (zone.x - (player?.position?.x||0)) * scale;
+        const my = 65 + (zone.z - (player?.position?.z||0)) * scale;
+        if(mx<0||mx>130||my<0||my>130) return;
+        const rad = zone.r * scale;
+        mmCtx.beginPath(); mmCtx.arc(mx,my,rad,0,Math.PI*2);
+        mmCtx.fillStyle = f.color+'22'; mmCtx.fill();
+        mmCtx.strokeStyle = f.color+'66'; mmCtx.lineWidth=1; mmCtx.stroke();
+        mmCtx.font='8px sans-serif'; mmCtx.fillStyle=f.color+'cc'; mmCtx.textAlign='center';
+        mmCtx.fillText(f.icon, mx, my+3);
+      });
+    }
+    // Vault blip
+    if(vaultChestGrp && player){
+      const foundKey = vaultChestGrp._foundKey;
+      if(!localStorage.getItem(foundKey)){
+        const scale = 130/120;
+        const mx = 65+(vaultChestGrp._chest.position.x-player.position.x)*scale;
+        const my = 65+(vaultChestGrp._chest.position.z-player.position.z)*scale;
+        if(mx>=2&&mx<=128&&my>=2&&my<=128){
+          mmCtx.beginPath(); mmCtx.arc(mx,my,5,0,Math.PI*2);
+          mmCtx.fillStyle='#f59e0b'; mmCtx.fill();
+          mmCtx.font='8px sans-serif'; mmCtx.fillStyle='#f59e0b';
+          mmCtx.textAlign='center'; mmCtx.fillText('🏆',mx,my+3);
+        }
+      }
+    }
+  };
 
-// Apply faction stat bonus in combat
-const _origProcessWBMove = window.processWildBattleMove;
-window.processWildBattleMove = function(moveIdx, isUltra){
-  const bonus = getFactionBonus();
-  if(bonus && myBattleSuper && !myBattleSuper._factionBoosted){
-    myBattleSuper._factionBoosted = true;
-    if(bonus.stat==='speed')   myBattleSuper.speed   = Math.round((myBattleSuper.speed||50)*1.2);
-    if(bonus.stat==='defense') myBattleSuper.defense = Math.round((myBattleSuper.defense||50)*1.2);
-    if(bonus.stat==='attack')  myBattleSuper.attack  = Math.round((myBattleSuper.attack||50)*1.2);
-    if(bonus.stat==='hp')      myBattleSuper.hp      = Math.min(myBattleSuper.maxHp, myBattleSuper.hp + Math.round(myBattleSuper.maxHp*0.2));
-  }
-  _origProcessWBMove(moveIdx, isUltra);
-};
+  // Simulate rival faction activity every 90s
+  setInterval(()=>{
+    if(!myFaction) return;
+    const rivals = Object.keys(FACTIONS).filter(f=>f!==myFaction);
+    const f = rivals[Math.floor(Math.random()*rivals.length)];
+    const z = WAR_ZONES[Math.floor(Math.random()*WAR_ZONES.length)];
+    const ctrl = getFactionControl();
+    Object.keys(ctrl[z.id]).forEach(k=>{ if(k===f) ctrl[z.id][k]=Math.min(100,ctrl[z.id][k]+3); else ctrl[z.id][k]=Math.max(0,ctrl[z.id][k]-1); });
+    saveFactionControl(ctrl);
+  }, 90000);
 
-// Update faction HUD position every 2s
-setInterval(()=>{ if(myFaction) updateFactionHud(); }, 2000);
+  // Update faction HUD every 2s
+  setInterval(()=>{ if(myFaction) updateFactionHud(); }, 2000);
+}
 
 // ════════════════════════════════════════════════════════
 // 🏆 VAULT HUNT
@@ -10905,27 +10919,7 @@ window.openVaultPanel = function(){
   document.getElementById('vault-panel').style.display = 'flex';
 };
 
-// Hook vault proximity check into the main loop
-const _origDrawMinimapVault = window.drawMinimap;
-window.drawMinimap = function(){
-  _origDrawMinimapVault();
-  if(!vaultChestGrp || !player) return;
-  const foundKey = vaultChestGrp._foundKey;
-  if(localStorage.getItem(foundKey)) return;
-  // Pulse gold dot on minimap
-  const scale = 130/120;
-  const mx = 65 + (vaultChestGrp._chest.position.x - player.position.x)*scale;
-  const my = 65 + (vaultChestGrp._chest.position.z - player.position.z)*scale;
-  if(mx<2||mx>128||my<2||my>128) return;
-  mmCtx.beginPath();
-  mmCtx.arc(mx, my, 5, 0, Math.PI*2);
-  mmCtx.fillStyle = '#f59e0b';
-  mmCtx.fill();
-  mmCtx.font = '8px sans-serif';
-  mmCtx.fillStyle = '#f59e0b';
-  mmCtx.textAlign = 'center';
-  mmCtx.fillText('🏆', mx, my+3);
-};
+// Vault minimap blip + all faction/vault hooks are wired in initFactionVaultHooks()
 
 // ════════════════════════════════════════════════════════
 // 🛒 COIN SHOP
